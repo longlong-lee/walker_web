@@ -288,9 +288,12 @@ img.avatar {
 .saw-setting {
   width: 100%;
   max-width: 100%;
-  overflow-x: scroll;
+  max-height: 600px;
+  overflow: scroll;
 }
 .saw-setting .table {
+  height: 1000px;
+  max-height: 1000px;
   width: 240%;
   max-width: 240%;
 }

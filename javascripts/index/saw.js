@@ -34,6 +34,7 @@ module.exports = ['$scope', '$state', 'notify', '$resource',
           }
           datas[index].push({
             name: value.name,
+            subname: val.name,
             objectId: value.playerid,
             subjectId: val.playerid,
             checked: checked
@@ -51,9 +52,10 @@ module.exports = ['$scope', '$state', 'notify', '$resource',
       }, {
           
         }).$promise.then(function (res) {
-          notify({ message: '状态修改成功', duration: 10000, classes: 'alert-success' });
-        }, function (data) {
-          notify({ message: '状态修改失败', duration: 10000, classes: 'alert-danger' });
+          var msg = data.name + (data.checked ? '可以看见' : '不可以看见') + data.subname;
+          notify({ message: msg, duration: 10000, classes: 'alert-success' });
+        }, function (res) {
+          notify({ message: '状态修改失败，请稍后重试', duration: 10000, classes: 'alert-danger' });
           data.checked = (data.checked ? false : true);
         });
     };

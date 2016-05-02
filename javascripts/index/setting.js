@@ -100,7 +100,7 @@ module.exports = ['$scope', '$state', 'Upload', 'notify', '$resource', 'ngDialog
         radius: data.radius,
         mul: data.mul,
         add: data.add,
-        switch: data.distanceWarning.switch,
+        switch: data.distanceWarning.warningSwitch,
         distance: data.distanceWarning.distance
       };
       ngDialog.open({
@@ -124,7 +124,7 @@ module.exports = ['$scope', '$state', 'Upload', 'notify', '$resource', 'ngDialog
           $scope.settings.radius = data.radius;
           $scope.settings.add = data.add;
           $scope.settings.mul = data.mul;
-          $scope.settings.distanceWarning.switch = data.switch;
+          $scope.settings.distanceWarning.warningSwitch = data.switch;
           $scope.settings.distanceWarning.distance = data.distance;
           notify({ message: '修改成功', duration: 10000, classes: 'alert-success' });
           ngDialog.close();
