@@ -31,6 +31,11 @@ gulp.task('html', function () {
     .pipe(gulp.dest('./dist/'));
 });
 
+gulp.task('fonts', function () {
+  gulp.src('./fonts/**')
+    .pipe(gulp.dest('./dist/fonts'));
+});
+
 gulp.task('zip', function () {
   gulp.src('./dist/**')
     .pipe(zip('archive.zip'))
@@ -38,7 +43,7 @@ gulp.task('zip', function () {
 });
 
 gulp.task('default', ['clean'], function () {
-  gulp.start('html', 'minify-css', 'minify-js');
+  gulp.start('html', 'minify-css', 'minify-js', 'fonts');
 });
 
 gulp.task('aa', function(){
