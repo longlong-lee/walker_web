@@ -1,0 +1,41 @@
+<div class="content-title">
+  <ul class="nav nav-pills">
+    <li ng-class="sref=='index.player'? 'active' : 'default'" ng-click="change($event)">
+      <a ui-sref="index.player">选手看板设置</a>
+    </li>
+    <li ng-class="sref=='index.setting'? 'active' : 'default'" ng-click="change($event)">
+      <a ui-sref="index.setting">活动设置</a>
+    </li>
+    <li ng-class="sref=='index.saw'? 'active' : 'default'" ng-click="change($event)">
+      <a ui-sref="index.saw">可见设置</a>
+    </li>
+  </ul>
+</div>
+<div class="content-ad">
+  <div class="row">
+    <div class="col-sm-3"></div>
+    <div class="col-sm-6">
+      <div class="input-group">
+        <input type="text" class="form-control ad-input" placeholder="公告输入" ng-model="notice">
+        <span class="input-group-btn">
+          <button class="btn btn-oppo" type="button" ng-click="sendNotice()">发送公告</button>
+        </span>
+      </div>
+    </div>
+    <div class="col-sm-3">
+      <div class="input-group">
+        <span class="input-group-btn">
+          <button class="btn btn-oppo" type="button" ng-click="seeNotice()">查看公告</button>
+        </span>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="tab-content">
+  <div ui-view="tab"></div>
+</div>
+<script type="text/ng-template" id="notice_dialog">
+  <div class="alert" ng-class="{'alert-success': $odd, 'alert-info': $even}" ng-repeat="data in noticeList">
+    {{data.create_time}} : {{data.content}}
+  </div>
+</script>

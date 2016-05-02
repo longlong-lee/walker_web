@@ -1,0 +1,239 @@
+<div class="row">
+  <button class="btn btn-primary ml20" ng-click="getPlayers()">刷新（每30s刷新一次）</button>
+</div>
+<div class="row">
+  <div class="content-content content-content-list1" ng-repeat="data in list1">
+    <div class="row content-content-1">
+      <div class="col-sm-8">
+        <div class="img img-list1">
+          <img ng-src="{{data.player.avatar}}" alt="" class="avatar">
+          <div class="name" title="{{data.player.name}}">{{data.player.name | nameFilter}}</div>
+          <div class="count">{{data.player.audience}}人</div>
+        </div>
+      </div>
+      <div class="col-sm-4">
+        <div class="remark remark-list1">{{data.player.role}}</div>
+        <div class="remark remark-list1">{{data.player.status}}</div>
+      </div>
+    </div>
+    <div class="content-content-2">
+      <div class="row color1">
+        <div class="col-sm-3">人气值</div>
+        <div class="col-sm-3">排名</div>
+        <div class="col-sm-3">土豆值</div>
+        <div class="col-sm-3">排名</div>
+      </div>
+      <div class="row color2 rank-list1">
+        <div class="col-sm-3">{{data.player.money}}</div>
+        <div class="col-sm-3">{{data.player.monry_rank}}</div>
+        <div class="col-sm-3">{{data.player.tudou}}</div>
+        <div class="col-sm-3">{{data.player.todou_rank}}</div>
+      </div>
+    </div>
+    <div class="content-content-3">
+      <div class="row edit-info" ng-click="editInfo(data)">
+        修改信息
+      </div>
+    </div>
+    <div class="content-content-4">
+      <div class="row content-content-4-list" ng-repeat="data in data.items | toolFilter">
+        <div class="col-sm-4">
+          <img class="tools" ng-src="{{data.picUrl}}" alt="" title="{{data.title}}">
+        </div>
+        <div class="col-sm-4">
+          {{data.usedAmount}}
+        </div>
+        <div class="col-sm-4">
+          {{data.mixAmount}}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="row">
+  <div class="content-content" ng-repeat="data in list2">
+    <div class="row content-content-1">
+      <div class="col-sm-8">
+        <div class="img">
+          <img ng-src="{{data.player.avatar}}" alt="" class="avatar">
+          <div class="name" title="{{data.player.name}}">{{data.player.name | nameFilter}}</div>
+          <div class="count">{{data.player.audience}}人</div>
+        </div>
+      </div>
+      <div class="col-sm-4">
+        <div class="remark">{{data.player.role}}</div>
+        <div class="remark">{{data.player.status}}</div>
+      </div>
+    </div>
+    <div class="content-content-2">
+      <div class="row color1">
+        <div class="col-sm-3">人气值</div>
+        <div class="col-sm-3">排名</div>
+        <div class="col-sm-3">土豆值</div>
+        <div class="col-sm-3">排名</div>
+      </div>
+      <div class="row color2">
+        <div class="col-sm-3">{{data.player.money}}</div>
+        <div class="col-sm-3">{{data.player.monry_rank}}</div>
+        <div class="col-sm-3">{{data.player.tudou}}</div>
+        <div class="col-sm-3">{{data.player.todou_rank}}</div>
+      </div>
+    </div>
+    <div class="content-content-3">
+      <div class="row edit-info" ng-click="editInfo(data)">
+        修改信息
+      </div>
+    </div>
+    <div class="content-content-4">
+      <div class="row content-content-4-list" ng-repeat="data in data.items | toolFilter">
+        <div class="col-sm-4">
+          <img class="tools" ng-src="{{data.picUrl}}" alt="" title="{{data.title}}">
+        </div>
+        <div class="col-sm-4">
+          {{data.usedAmount}}
+        </div>
+        <div class="col-sm-4">
+          {{data.mixAmount}}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="row">
+  <div class="content-content content-content-list3" ng-repeat="data in list3">
+    <div class="row content-content-1">
+      <div class="col-sm-8">
+        <div class="img img-list3">
+          <img ng-src="{{data.player.avatar}}" alt="" class="avatar">
+          <div class="name" title="{{data.player.name}}">{{data.player.name | nameFilter}}</div>
+          <div class="count">{{data.player.audience}}人</div>
+        </div>
+      </div>
+      <div class="col-sm-4">
+        <div class="remark remark-list3">{{data.player.role}}</div>
+        <div class="remark remark-list3">{{data.player.status}}</div>
+      </div>
+    </div>
+    <div class="content-content-2">
+      <div class="row">
+        <div class="col-sm-3">人气值</div>
+        <div class="col-sm-3">排名</div>
+        <div class="col-sm-3">土豆值</div>
+        <div class="col-sm-3">排名</div>
+      </div>
+      <div class="row color2 rank-list3">
+        <div class="col-sm-3">{{data.player.money}}</div>
+        <div class="col-sm-3">{{data.player.monry_rank}}</div>
+        <div class="col-sm-3">{{data.player.tudou}}</div>
+        <div class="col-sm-3">{{data.player.todou_rank}}</div>
+      </div>
+    </div>
+    <div class="content-content-3">
+      <div class="row edit-info" ng-click="editInfo(data)">
+        修改信息
+      </div>
+    </div>
+    <div class="content-content-4">
+      <div class="row content-content-4-list" ng-repeat="data in data.items | toolFilter">
+        <div class="col-sm-4">
+          <img class="tools" ng-src="{{data.picUrl}}" alt="" title="{{data.title}}">
+        </div>
+        <div class="col-sm-4">
+          {{data.usedAmount}}
+        </div>
+        <div class="col-sm-4">
+          {{data.mixAmount}}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<script type="text/ng-template" id="dialog">
+  <div class="row dialog-layer-1">
+    <div class="col-sm-2">
+      <div class="img">
+        <img ng-src="{{editData.player.avatar}}" alt="" class="avatar">
+        <div>{{editData.player.name | nameFilter}}</div>
+        <div>{{editData.player.audience}}人</div>
+      </div>
+    </div>
+    <div class="col-sm-2 remark">
+      {{editData.player.role}}
+    </div>
+    <div class="col-sm-6">
+      <div class="row color1">
+        <div class="col-sm-3">人气值</div>
+        <div class="col-sm-3">排名</div>
+        <div class="col-sm-3">pk值</div>
+        <div class="col-sm-3">排名</div>
+      </div>
+      <div class="row color2">
+        <div class="col-sm-3">{{editData.player.money}}</div>
+        <div class="col-sm-3">{{editData.player.monry_rank}}</div>
+        <div class="col-sm-3">{{editData.player.tudou}}</div>
+        <div class="col-sm-3">{{editData.player.todou_rank}}</div>
+      </div>
+    </div>
+  </div>
+  <div class="row dialog-layer-2">
+    <div class="col-sm-6">
+      <div class="row">
+        <div class="col-sm-3">
+          角色
+        </div>
+        <div class="col-sm-4">
+          <select class="form-control select-check" ng-options="role.name as role.name for role in roleList" ng-model="editData.player.role">
+          </select>
+        </div>
+        <div class="col-sm-2">
+        </div>
+        <div class="col-sm-3 dialog-layer-2-line">
+          <button class="btn btn-dialog-2" ng-click="editRole()">确定</button>
+        </div>
+      </div>
+    </div>
+    <div class="col-sm-6">
+      <div class="row">
+        <div class="col-sm-3">
+          状态
+        </div>
+        <div class="col-sm-4">
+          <select class="form-control select-check" ng-options="status.name as status.name for status in statusList" ng-model="editData.player.status">
+          </select>
+        </div>
+        <div class="col-sm-2">
+        </div>
+        <div class="col-sm-3">
+          <button class="btn btn-dialog-2" ng-click="editStatus()">确定</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row dialog-layer-3">
+    <div class="mt30">
+      <div class="wd50 fl" ng-repeat="data in editData.items">
+        <div class="col-sm-1">
+          <span ng-if="data.playerNeed !== 0">急</span>
+        </div>
+        <div class="col-sm-2">
+          <img src="" alt="" class="avatar" ng-src="{{data.picUrl}}" title="{{data.title}}">
+        </div>
+        <div class="col-sm-4">
+          <div class="progress mt16">
+            <div class="progress-bar progress-bar-danger progress-bar-striped" role="progressbar" aria-valuenow="80" aria-valuemin="0"
+              aria-valuemax="100" ng-class="{'wd0': (data.currentAmount/data.fundTotalAmount < 0.2), 'wd20': (data.currentAmount/data.fundTotalAmount < 0.4 && data.currentAmount/data.fundTotalAmount >= 0.2)}">
+              <span class="sr-only">80% Complete (danger)</span>
+            </div>
+          </div>
+        </div>
+        <div class="col-sm-2 ml20 crp mt12" ng-click="showInput(data)" ng-hide="data.isClick">{{data.usedAmount}}/{{data.mixAmount}}</div>
+        <div class="col-sm-2 ml20 mt7">
+          <input type="text" class="form-control" ng-model="data.usedAmount" ng-show="data.isClick">
+        </div>
+        <div class="col-sm-1 mt7">
+          <button class="btn btn-default" ng-show="data.isClick" ng-click="editNum(editData, data)">确定</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</script>

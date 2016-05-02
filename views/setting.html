@@ -1,0 +1,259 @@
+<div class="set">
+  <div class="role-set">地图元素维护</div>
+  <div class="map-title-set">默认区域设置</div>
+  <table class="table map-table table-hover">
+    <thead>
+      <tr>
+        <th class="">区域中心</th>
+        <th class="">半径</th>
+        <th class="">美化系数（乘）</th>
+        <th class="">美化系数（加）</th>
+        <th class="">距离提醒（开关）</th>
+        <th class="">距离提醒（距离）</th>
+        <th class="">操作</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>
+          <span>{{settings.center.lng}},{{settings.center.lat}}</span>
+          <span name="edit_map" class="glyphicon glyphicon-map-marker set-font-size" title="点击修改坐标" ng-click="show_map_dialog(settings)"></span>
+        </td>
+        <td>
+          <span>{{settings.radius}}</span>
+        </td>
+        <td>
+          <span>{{settings.add}}</span>
+        </td>
+        <td>
+          <span>{{settings.mul}}</span>
+        </td>
+        <td>
+          <span>{{settings.distanceWarning.switch}}</span>
+        </td>
+        <td>
+          <span>{{settings.distanceWarning.distance}}</span>
+        </td>
+        <td>
+          <a href="javascript:;" ng-click="edit_setting()">修改</a>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <div class="map-title-set">特殊建筑维护</div>
+  <table class="table map-table table-hover">
+    <thead>
+      <tr>
+        <th class="wd17">建筑图标</th>
+        <th class="wd11">名称</th>
+        <th class="wd11">角色</th>
+        <th class="wd11">电话号码</th>
+        <th class="wd32">坐标</th>
+        <th class="wd18">操作</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr ng-repeat="data in buildings">
+        <td><img src="" alt="" ng-src="{{data.imgUrl}}"></td>
+        <td>{{data.name}}</td>
+        <td>{{data.name}}</td>
+        <td>{{data.name}}</td>
+        <td>
+          <span>{{data.coordinate}}</span>
+          <span name="edit_map" class="glyphicon glyphicon-map-marker set-font-size" title="点击修改坐标" ng-click="show_map_dialog(data)"></span>
+        </td>
+        <td>
+          <a href="javascript:;" ng-click="edit_build(data)">修改</a>
+          <a class="btn-del" href="javascript:;" ng-click="del_build(data.id)">删除</a>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <img src="" alt="" ng-src="{{build.imgUrl}}">
+          <div class="upload" type="file" ngf-select="upload_build($file)" accept="image/*" ngf-max-height="100000" ngf-max-size="10MB">上传图标</div>
+        </td>
+        <td><input type="text" class="form-control" placeholder="请输入名称" ng-model="build.name"></td>
+        <td>
+          <select class="form-control" ng-options="role.name as role.name for role in roleList" ng-model="build.role"></select>
+        </td>
+        <td>
+          <input type="text" class="form-control" placeholder="请输入电话号码" ng-model="build.tel">
+        </td>
+        <td>
+          <span>{{build.coordinate}}</span>
+          <span class="glyphicon glyphicon-map-marker set-font-size" title="点击设置坐标" ng-click="show_map_dialog(data)"></span>
+        </td>
+        <td>
+          <button class="btn btn-oppo" ng-click="add_build()" ng-disabled="isAddBuild">添加特殊建筑</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <div class="map-title-set">选手维护</div>
+  <table class="table map-table table-hover">
+    <thead>
+      <tr>
+        <th>头像</th>
+        <th>姓名</th>
+        <th>性别</th>
+        <th>手机号</th>
+        <th>角色</th>
+        <th>操作</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr ng-repeat="data in players">
+        <td class="wd18">
+          <img ng-src="{{data.imgUrl}}" alt="">
+        </td>
+        <td class="wd16">{{data.name}}</td>
+        <td class="wd16">{{data.sex}}</td>
+        <td class="wd16">{{data.phone}}</td>
+        <td class="wd16">{{data.role}}</td>
+        <td class="wd18">
+          <a href="javascript:;" ng-click="edit_player(data)">修改</a>
+          <a class="btn-del" href="javascript:;" ng-click="del_player(data.id)">删除</a>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <img src="" alt="" ng-src="{{player.imgUrl}}">
+          <div class="upload" type="file" ngf-select="upload_player($file)" accept="image/*" ngf-max-height="100000" ngf-max-size="10MB">上传头像</div>
+        </td>
+        <td><input type="text" class="form-control" placeholder="请输入姓名" ng-model="player.name"></td>
+        <td>
+          <select class="form-control" ng-model="player.sex">
+            <option value="男">男</option>
+            <option value="女">女</option>
+          </select>
+        </td>
+        <td><input type="text" class="form-control" placeholder="请输入手机号" ng-model="player.phone"></td>
+        <td>
+          <select class="form-control" ng-model="player.role">
+            <option value="逃亡者">逃亡者</option>
+            <option value="追击者">追击者</option>
+          </select>
+        </td>
+        <td>
+          <button class="btn btn-oppo" ng-click="add_player()" ng-disabled="isAddPlayer">添加选手</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+<!--区域设置 修改框-->
+<script type="text/ng-template" id="edit_setting_dialog">
+  <div class="row mb10">
+    <label class="col-sm-4">半径</label>
+    <div class="col-sm-8">
+      <input type="text" class="form-control" placeholder="请输入半径" ng-model="settingEdit.radius">
+    </div>
+  </div>
+  <div class="row mb10">
+    <label class="col-sm-4">美化系数（乘）</label>
+    <div class="col-sm-8">
+      <input type="text" class="form-control" placeholder="请输入美化系数" ng-model="settingEdit.mul">
+    </div>
+  </div>
+  <div class="row mb10">
+    <label class="col-sm-4">美化系数（加）</label>
+    <div class="col-sm-8">
+      <input type="text" class="form-control" placeholder="请输入美化系数" ng-model="settingEdit.add">
+    </div>
+  </div>
+  <div class="row mb10">
+    <label class="col-sm-4">距离提醒（开关）</label>
+    <div class="col-sm-8">
+      <select class="form-control select-check" ng-model="settingEdit.switch">
+        <option value="on">开</option>
+        <option value="off">关</option>
+      </select>
+    </div>
+  </div>
+  <div class="row mb10">
+    <label class="col-sm-4">距离提醒（距离）</label>
+    <div class="col-sm-8">
+      <input type="text" class="form-control" placeholder="请输入距离" ng-model="settingEdit.distance">
+    </div>
+  </div>
+  <div class="row">
+    <button class="ngdialog-button ngdialog-button-primary" ng-click="closeThisDialog(0)">关闭</button>
+    <button class="ngdialog-button ngdialog-button-primary" ng-click="update_setting()">保存</button>
+  </div>
+</script>
+<!--特殊建筑维护 修改框-->
+<script type="text/ng-template" id="edit_build_dialog">
+  <div class="row edit_build_dialog mb10">
+    <label class="col-sm-3">建筑图标</label>
+    <div class="col-sm-9">
+      <img src="" alt="" ng-src="{{buildEdit.imgUrl}}">
+      <div class="upload dialog-upload" type="file" ngf-select="edit_upload_build($file)" accept="image/*" ngf-max-height="100000"
+        ngf-max-size="10MB">上传图标</div>
+    </div>
+  </div>
+  <div class="row mb10">
+    <label class="col-sm-3">名称</label>
+    <div class="col-sm-9">
+      <input type="text" class="form-control" placeholder="请输入名称" ng-model="buildEdit.name">
+    </div>
+  </div>
+  <div class="row">
+    <button class="ngdialog-button ngdialog-button-primary" ng-click="closeThisDialog(0)">关闭</button>
+    <button class="ngdialog-button ngdialog-button-primary" ng-click="update_build()">保存</button>
+  </div>
+</script>
+<!--选手维护 修改框-->
+<script type="text/ng-template" id="edit_player_dialog">
+  <div class="row edit_build_dialog mb10">
+    <label class="col-sm-3">选手头像</label>
+    <div class="col-sm-9">
+      <img src="" alt="" ng-src="{{playerEdit.imgUrl}}">
+      <div class="upload dialog-upload" type="file" ngf-select="edit_upload_player($file)" accept="image/*" ngf-max-height="100000"
+        ngf-max-size="10MB">上传头像</div>
+    </div>
+  </div>
+  <div class="row mb10">
+    <label class="col-sm-3">姓名</label>
+    <div class="col-sm-9">
+      <input type="text" class="form-control" placeholder="请输入姓名" ng-model="playerEdit.name">
+    </div>
+  </div>
+  <div class="row mb10">
+    <label class="col-sm-3">性别</label>
+    <div class="col-sm-9">
+      <select class="form-control" ng-model="playerEdit.sex">
+        <option value="男">男</option>
+        <option value="女">女</option>
+      </select>
+    </div>
+  </div>
+  <div class="row mb10">
+    <label class="col-sm-3">手机号</label>
+    <div class="col-sm-9">
+      <input type="text" class="form-control" placeholder="请输入手机号" ng-model="playerEdit.phone">
+    </div>
+  </div>
+  <div class="row mb10">
+    <label class="col-sm-3">角色</label>
+    <div class="col-sm-9">
+      <select class="form-control" ng-model="playerEdit.role">
+        <option value="逃亡者">逃亡者</option>
+        <option value="追击者">追击者</option>
+      </select>
+    </div>
+  </div>
+  <div class="row">
+    <button class="ngdialog-button ngdialog-button-primary" ng-click="closeThisDialog(0)">关闭</button>
+    <button class="ngdialog-button ngdialog-button-primary" ng-click="update_player()">保存</button>
+  </div>
+</script>
+<!--地图 -->
+<script type="text/ng-template" id="map_dialog">
+  <div class="row tac mb10">
+    <div class="map" id="mapContainer"></div>
+  </div>
+  <div class="row">
+    <button class="ngdialog-button ngdialog-button-primary" ng-click="set_map_position_colse()">关闭</button>
+    <button class="ngdialog-button ngdialog-button-primary" ng-click="set_map_position()">保存</button>
+  </div>
+</script>
