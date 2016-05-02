@@ -221,7 +221,10 @@
         <div class="col-sm-4">
           <div class="progress mt16">
             <div class="progress-bar progress-bar-danger progress-bar-striped" role="progressbar" aria-valuenow="80" aria-valuemin="0"
-              aria-valuemax="100" ng-class="{'wd0': (data.currentAmount/data.fundTotalAmount < 0.2), 'wd20': (data.currentAmount/data.fundTotalAmount < 0.4 && data.currentAmount/data.fundTotalAmount >= 0.2)}">
+              aria-valuemax="100" 
+              ng-class="{'wd0': (data.currentAmount/data.fundTotalAmount < 0.2), 'wd20': (data.currentAmount/data.fundTotalAmount < 0.4 && data.currentAmount/data.fundTotalAmount >= 0.2), 
+              'wd40': (data.currentAmount/data.fundTotalAmount < 0.6 && data.currentAmount/data.fundTotalAmount >= 0.4), 'wd60': (data.currentAmount/data.fundTotalAmount < 0.8 && data.currentAmount/data.fundTotalAmount >= 0.6),
+              'wd80': (data.currentAmount/data.fundTotalAmount < 1 && data.currentAmount/data.fundTotalAmount >= 0.8), 'wd100': (data.currentAmount/data.fundTotalAmount == 1)}">
               <span class="sr-only">80% Complete (danger)</span>
             </div>
           </div>
