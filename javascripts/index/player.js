@@ -90,7 +90,7 @@ module.exports = ['$scope', '$state', 'ngDialog', 'notify', '$resource', '$inter
       $resource('/walker/player/:id').save({
         id: $scope.editData.player.playerid
       }, {
-          tudou: $scope.editData.player.tudou
+          tudou: parseInt($scope.editData.player.tudou, 10)
         }).$promise.then(function (data) {
           notify({ message: '土豆值修改成功', duration: 10000, classes: 'alert-success' });
           $scope.editDataOrigin.player.tudou = $scope.editData.player.tudou;
