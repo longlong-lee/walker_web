@@ -25,9 +25,8 @@ module.exports = ['$scope', '$state', 'Upload', 'notify', '$resource', 'ngDialog
       if (map.r) {
         map.setZoom(10);
         if ($scope.edit_build_mode) {
-          var coordinate = $scope.editBuildData.coordinate.split(',');
-          var position = new AMap.LngLat(coordinate[0], coordinate[1]);
-          map.setCenter([coordinate[0], coordinate[1]]);
+          var position = new AMap.LngLat($scope.editBuildData.lng, $scope.editBuildData.lat);
+          map.setCenter([$scope.editBuildData.lng, $scope.editBuildData.lat]);
           new AMap.Marker({
             position: position,
             map: map
@@ -48,26 +47,27 @@ module.exports = ['$scope', '$state', 'Upload', 'notify', '$resource', 'ngDialog
             position: e.lnglat,
             map: map
           });
-          $scope.clickPosition = e.lnglat.lng + ',' + e.lnglat.lat//经度 - lng   纬度 - lat
+          $scope.clickPositionLng = e.lnglat.lng; //经度 - lng
+          $scope.clickPositionLat = e.lnglat.lat; //纬度 - lat
         };
         map.on('click', _onClick);
       }
     });
     $scope.set_map_position = function () {
       if ($scope.edit_build_mode) {
-        $scope.editBuildData.coordinate = $scope.clickPosition;
+        $scope.editBuildData.lng = $scope.clickPositionLng;
+        $scope.editBuildData.lat = $scope.clickPositionLat;
         $scope.edit_build_mode = false;
         //TODO update 坐标的数据
       } else if ($scope.edit_setting_mode) {
-        var data = $scope.clickPosition.split(',');
         $resource('/walker/setting/ ').save({
 
         }, {
-            centerLng: data[0] + '',
-            centerLat: data[1] + ''
+            centerLng: $scope.clickPositionLng + '',
+            centerLat: $scope.clickPositionLat + ''
           }).$promise.then(function (req) {
-            $scope.settings.center.lng = data[0];
-            $scope.settings.center.lat = data[1];
+            $scope.settings.center.lng = $scope.clickPositionLng;
+            $scope.settings.center.lat = $scope.clickPositionLat;
             $scope.edit_setting_mode = false;
             notify({ message: '修改成功', duration: 10000, classes: 'alert-success' });
             ngDialog.close();
@@ -75,7 +75,8 @@ module.exports = ['$scope', '$state', 'Upload', 'notify', '$resource', 'ngDialog
             notify({ message: '出错啦', duration: 10000, classes: 'alert-danger' });
           });
       } else {
-        $scope.build.coordinate = $scope.clickPosition;
+        $scope.build.lng = $scope.clickPositionLng;
+        $scope.build.lat = $scope.clickPositionLat;
       }
       ngDialog.close();
     };
@@ -150,34 +151,46 @@ module.exports = ['$scope', '$state', 'Upload', 'notify', '$resource', 'ngDialog
         name: '天眼'
       }];
     $scope.build = {
-      imgUrl: '',
+      avatar: '',
       name: '',
-      coordinate: ''
+      role: '',
+      tel: '',
+      lng: '',
+      lat: ''
     };
     $scope.isAddBuild = false;
     // 查询建筑物
     $scope.query_build = function () {
-      // queryService.get({
-      //   type: 'car'
+      // $resource('/walker/player/building').get({
+
       // }).$promise.then(function (data) {
       //   if (data.success) {
-      $scope.buildings = [{
-        id: '1',
-        imgUrl: 'http://picset.tudou.com/2016-04-30/1461998878190-2089056432-diyup.jpg',
-        name: '仓库',
-        coordinate: '121.49393,31.192231'
-      }, {
-          id: '2',
-          imgUrl: 'http://picset.tudou.com/2016-04-30/1461998878190-2089056432-diyup.jpg',
-          name: '监狱',
-          coordinate: '121.651858,31.044096'
-        }, {
-          id: '3',
-          imgUrl: 'http://picset.tudou.com/2016-04-30/1461998878190-2089056432-diyup.jpg',
-          name: '餐厅',
-          coordinate: '120.621969,31.281598'
-        }
-      ];
+          $scope.buildings = [{
+            playerid: '1',
+            avatar: 'http://picset.tudou.com/2016-04-30/1461998878190-2089056432-diyup.jpg',
+            name: '赌场',
+            role: '赌场',
+            tel: '123123123',
+            lng: '121.49393',
+            lat: '31.192231'
+          }, {
+              playerid: '2',
+              avatar: 'http://picset.tudou.com/2016-04-30/1461998878190-2089056432-diyup.jpg',
+              name: '监狱',
+              role: '监狱',
+              tel: '33333333',
+              lng: '121.651858',
+              lat: '31.044096'
+            }, {
+              playerid: '3',
+              avatar: 'http://picset.tudou.com/2016-04-30/1461998878190-2089056432-diyup.jpg',
+              name: '角斗场',
+              role: '角斗场',
+              tel: '44444444444',
+              lng: '120.621969',
+              lat: '31.281598'
+            }
+          ];
       //   } else {
       //     notify({ message: '出错啦', duration: 10000, classes: 'alert-danger' });
       //   }
@@ -198,7 +211,7 @@ module.exports = ['$scope', '$state', 'Upload', 'notify', '$resource', 'ngDialog
         }).then(function (data) {
           var data = data.data;
           if (data.status === 'success') {
-            $scope.build.imgUrl = data.url;
+            $scope.build.avatar = data.url;
             notify({ message: '图标上传成功', duration: 10000, classes: 'alert-success' });
           } else {
             notify({ message: '图标上传失败', duration: 10000, classes: 'alert-danger' });
@@ -212,7 +225,7 @@ module.exports = ['$scope', '$state', 'Upload', 'notify', '$resource', 'ngDialog
     };
     // 增加建筑物时 -- 校验必填项
     $scope.valid_build = function () {
-      if (!$scope.build.imgUrl) {
+      if (!$scope.build.avatar) {
         notify({ message: '请上传建筑图标', duration: 10000, classes: 'alert-danger' });
         return false;
       }
@@ -220,7 +233,15 @@ module.exports = ['$scope', '$state', 'Upload', 'notify', '$resource', 'ngDialog
         notify({ message: '请填写建筑名称', duration: 10000, classes: 'alert-danger' });
         return false;
       }
-      if (!$scope.build.coordinate) {
+      if (!($scope.build.role)) {
+        notify({ message: '请填写建筑角色', duration: 10000, classes: 'alert-danger' });
+        return false;
+      }
+      if (!($scope.build.tel)) {
+        notify({ message: '请填写电话', duration: 10000, classes: 'alert-danger' });
+        return false;
+      }
+      if (!($scope.build.lng && $scope.build.lat)) {
         notify({ message: '请填写建筑坐标', duration: 10000, classes: 'alert-danger' });
         return false;
       }
@@ -231,11 +252,14 @@ module.exports = ['$scope', '$state', 'Upload', 'notify', '$resource', 'ngDialog
       if ($scope.valid_build()) {
         $scope.isAddBuild = true;
         var data = {};
-        data.imgUrl = $scope.build.imgUrl;
+        data.avatar = $scope.build.avatar;
         data.name = $scope.build.name;
-        data.coordinate = $scope.build.coordinate;
-        queryService.save({
-          type: 'car'
+        data.role = $scope.build.role;
+        data.tel = $scope.build.tel;
+        data.lng = $scope.build.lng;
+        data.lat = $scope.build.lat;
+        $resource('/walker/player/ ').save({
+
         }, {
             data: data
           }).$promise.then(function (data) {
@@ -247,17 +271,20 @@ module.exports = ['$scope', '$state', 'Upload', 'notify', '$resource', 'ngDialog
             }
             $scope.isAddBuild = false;
             $scope.build = {
-              imgUrl: '',
+              avatar: '',
               name: '',
-              coordinate: ''
+              role: '',
+              tel: '',
+              lng: '',
+              lat: ''
             };
           });
       }
     };
     // 删除建筑物
     $scope.del_build = function (id) {
-      queryService.remove({
-        type: 'car'
+      $resource('/walker/player/building').remove({
+
       }, {
           id: id
         }).$promise.then(function (data) {
@@ -273,10 +300,12 @@ module.exports = ['$scope', '$state', 'Upload', 'notify', '$resource', 'ngDialog
     // 编辑建筑物时 -- 弹窗
     $scope.edit_build = function (data) {
       $scope.editBuildData = data;
-      $scope.buildEditId = data.id;
+      $scope.buildEditId = data.playerid;
       $scope.buildEdit = {
-        imgUrl: data.imgUrl,
-        name: data.name
+        avatar: data.avatar,
+        name: data.name,
+        role: data.role,
+        tel: data.tel
       };
       ngDialog.open({
         template: 'edit_build_dialog',
@@ -290,7 +319,7 @@ module.exports = ['$scope', '$state', 'Upload', 'notify', '$resource', 'ngDialog
     $scope.edit_upload_build = function (file) {
       if (file) {
         Upload.upload({
-          url: 'http://testapi.kids.youku.com/v1/img/upload',
+          url: '/v1/img/upload',
           method: 'POST',
           data: {
             image: file
@@ -298,7 +327,7 @@ module.exports = ['$scope', '$state', 'Upload', 'notify', '$resource', 'ngDialog
         }).then(function (data) {
           var data = data.data;
           if (data.status === 'success') {
-            $scope.buildEdit.imgUrl = data.url;
+            $scope.buildEdit.avatar = data.url;
             notify({ message: '图标上传成功', duration: 10000, classes: 'alert-success' });
           } else {
             notify({ message: '图标上传失败', duration: 10000, classes: 'alert-danger' });
@@ -312,60 +341,57 @@ module.exports = ['$scope', '$state', 'Upload', 'notify', '$resource', 'ngDialog
     };
     // 修改建筑物
     $scope.update_build = function () {
-      $scope.editBuildData.imgUrl = $scope.buildEdit.imgUrl;
+      $scope.editBuildData.avatar = $scope.buildEdit.avatar;
       $scope.editBuildData.name = $scope.buildEdit.name;
+      $scope.editBuildData.role = $scope.buildEdit.role;
+      $scope.editBuildData.tel = $scope.buildEdit.tel;
       ngDialog.close();
-      // queryService.update({
-      //   type: 'car',
-      //   id: $scope.buildEditId
-      // }, {
-      //     data: $scope.buildEdit
-      //   }).$promise.then(function (data) {
-      //     if (data.success) {
-      //       notify({ message: '修改成功', duration: 10000, classes: 'alert-success' });
-      //     } else {
-      //       notify({ message: '出错啦', duration: 10000, classes: 'alert-danger' });
-      //     }
-      //   }, function (data) {
-      //     notify({ message: '出错啦', duration: 10000, classes: 'alert-danger' });
-      //   });
+      $resource('/walker/player/building').save({
+        id: $scope.buildEditId
+      }, {
+          data: $scope.buildEdit
+        }).$promise.then(function (data) {
+          if (data.success) {
+            notify({ message: '修改成功', duration: 10000, classes: 'alert-success' });
+          } else {
+            notify({ message: '出错啦', duration: 10000, classes: 'alert-danger' });
+          }
+        }, function (data) {
+          notify({ message: '出错啦', duration: 10000, classes: 'alert-danger' });
+        });
     };
     //------------------建筑模块开始----------------------
     //------------------选手模块开始----------------------
     $scope.player = {
-      imgUrl: '',
+      avatar: '',
       name: '',
-      sex: '',
-      phone: '',
+      tel: '',
       role: ''
     };
     $scope.isAddPlayer = false;
     // 查询选手
     $scope.query_player = function () {
-      // queryService.get({
+      //  $resource('/walker/player').get({
       //   type: 'car'
       // }).$promise.then(function (data) {
       //   if (data.success) {
       $scope.players = [{
-        id: '1',
-        imgUrl: 'http://picset.tudou.com/2016-04-30/1461998878190-2089056432-diyup.jpg',
+        playerid: '1',
+        avatar: 'http://picset.tudou.com/2016-04-30/1461998878190-2089056432-diyup.jpg',
         name: '小明',
-        sex: '男',
-        phone: '123456789',
+        tel: '123456789',
         role: '逃亡者'
       }, {
-          id: '2',
-          imgUrl: 'http://picset.tudou.com/2016-04-30/1461998878190-2089056432-diyup.jpg',
+          playerid: '2',
+          avatar: 'http://picset.tudou.com/2016-04-30/1461998878190-2089056432-diyup.jpg',
           name: '旺财',
-          sex: '女',
-          phone: '546895248',
+          tel: '546895248',
           role: '追击者'
         }, {
-          id: '3',
-          imgUrl: 'http://picset.tudou.com/2016-04-30/1461998878190-2089056432-diyup.jpg',
+          playerid: '3',
+          avatar: 'http://picset.tudou.com/2016-04-30/1461998878190-2089056432-diyup.jpg',
           name: '静静',
-          sex: '女',
-          phone: '7895468924',
+          tel: '7895468924',
           role: '追击者'
         }
       ];
@@ -381,7 +407,7 @@ module.exports = ['$scope', '$state', 'Upload', 'notify', '$resource', 'ngDialog
     $scope.upload_player = function (file) {
       if (file) {
         Upload.upload({
-          url: 'http://testapi.kids.youku.com/v1/img/upload',
+          url: '/v1/img/upload',
           method: 'POST',
           data: {
             image: file
@@ -389,7 +415,7 @@ module.exports = ['$scope', '$state', 'Upload', 'notify', '$resource', 'ngDialog
         }).then(function (data) {
           var data = data.data;
           if (data.status === 'success') {
-            $scope.player.imgUrl = data.url;
+            $scope.player.avatar = data.url;
             notify({ message: '头像上传成功', duration: 10000, classes: 'alert-success' });
           } else {
             notify({ message: '头像上传失败', duration: 10000, classes: 'alert-danger' });
@@ -403,7 +429,7 @@ module.exports = ['$scope', '$state', 'Upload', 'notify', '$resource', 'ngDialog
     };
     // 增加选手时 -- 校验必填
     $scope.valid_player = function () {
-      if (!$scope.player.imgUrl) {
+      if (!$scope.player.avatar) {
         notify({ message: '请上传选手头像', duration: 10000, classes: 'alert-danger' });
         return false;
       }
@@ -411,11 +437,7 @@ module.exports = ['$scope', '$state', 'Upload', 'notify', '$resource', 'ngDialog
         notify({ message: '请填写选手姓名', duration: 10000, classes: 'alert-danger' });
         return false;
       }
-      if (!$scope.player.sex) {
-        notify({ message: '请填写选手性别', duration: 10000, classes: 'alert-danger' });
-        return false;
-      }
-      if (!$scope.player.phone) {
+      if (!$scope.player.tel) {
         notify({ message: '请填写选手手机号码', duration: 10000, classes: 'alert-danger' });
         return false;
       }
@@ -430,13 +452,12 @@ module.exports = ['$scope', '$state', 'Upload', 'notify', '$resource', 'ngDialog
       if ($scope.valid_player()) {
         $scope.isAddPlayer = true;
         var data = {};
-        data.imgUrl = $scope.player.imgUrl;
+        data.avatar = $scope.player.avatar;
         data.name = $scope.player.name;
-        data.sex = $scope.player.sex;
-        data.phone = $scope.player.phone;
+        data.tel = $scope.player.tel;
         data.role = $scope.player.role;
-        queryService.save({
-          type: 'car'
+        $resource('/walker/player').save({
+
         }, {
             data: data
           }).$promise.then(function (data) {
@@ -448,7 +469,7 @@ module.exports = ['$scope', '$state', 'Upload', 'notify', '$resource', 'ngDialog
             }
             $scope.isAddPlayer = false;
             $scope.player = {
-              imgUrl: '',
+              avatar: '',
               name: '',
               sex: '',
               phone: '',
@@ -459,8 +480,8 @@ module.exports = ['$scope', '$state', 'Upload', 'notify', '$resource', 'ngDialog
     };
     // 删除选手
     $scope.del_player = function (id) {
-      queryService.remove({
-        type: 'car'
+      $resource('/walker/player').remove({
+
       }, {
           id: id
         }).$promise.then(function (data) {
@@ -475,13 +496,12 @@ module.exports = ['$scope', '$state', 'Upload', 'notify', '$resource', 'ngDialog
     $scope.playerEdit = {};
     // 编辑选手
     $scope.edit_player = function (data) {
-      $scope.playerEditId = data.id;
+      $scope.playerEditId = data.playerid;
       $scope.playerEditData = data;
       $scope.playerEdit = {
-        imgUrl: data.imgUrl,
+        avatar: data.avatar,
         name: data.name,
-        sex: data.sex,
-        phone: data.phone,
+        tel: data.tel,
         role: data.role
       };
       ngDialog.open({
@@ -496,7 +516,7 @@ module.exports = ['$scope', '$state', 'Upload', 'notify', '$resource', 'ngDialog
     $scope.edit_upload_player = function (file) {
       if (file) {
         Upload.upload({
-          url: 'http://testapi.kids.youku.com/v1/img/upload',
+          url: '/v1/img/upload',
           method: 'POST',
           data: {
             image: file
@@ -504,7 +524,7 @@ module.exports = ['$scope', '$state', 'Upload', 'notify', '$resource', 'ngDialog
         }).then(function (data) {
           var data = data.data;
           if (data.status === 'success') {
-            $scope.playerEdit.imgUrl = data.url;
+            $scope.playerEdit.avatar = data.url;
             notify({ message: '头像上传成功', duration: 10000, classes: 'alert-success' });
           } else {
             notify({ message: '头像上传失败', duration: 10000, classes: 'alert-danger' });
@@ -518,13 +538,12 @@ module.exports = ['$scope', '$state', 'Upload', 'notify', '$resource', 'ngDialog
     };
     // 修改选手
     $scope.update_player = function () {
-      $scope.playerEditData.imgUrl = $scope.playerEdit.imgUrl;
+      $scope.playerEditData.avatar = $scope.playerEdit.avatar;
       $scope.playerEditData.name = $scope.playerEdit.name;
-      $scope.playerEditData.sex = $scope.playerEdit.sex;
-      $scope.playerEditData.phone = $scope.playerEdit.phone;
+      $scope.playerEditData.tel = $scope.playerEdit.tel;
       $scope.playerEditData.role = $scope.playerEdit.role;
       ngDialog.close();
-      // queryService.update({
+      // $resource('/walker/player').update({
       //   type: 'car',
       //   id: $scope.playerEditId
       // }, {

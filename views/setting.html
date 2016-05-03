@@ -54,22 +54,22 @@
     </thead>
     <tbody>
       <tr ng-repeat="data in buildings">
-        <td><img src="" alt="" ng-src="{{data.imgUrl}}"></td>
+        <td><img src="" alt="" ng-src="{{data.avatar}}"></td>
         <td>{{data.name}}</td>
-        <td>{{data.name}}</td>
-        <td>{{data.name}}</td>
+        <td>{{data.role}}</td>
+        <td>{{data.tel}}</td>
         <td>
-          <span>{{data.coordinate}}</span>
+          <span>{{data.lng}}, {{data.lat}}</span>
           <span name="edit_map" class="glyphicon glyphicon-map-marker set-font-size" title="点击修改坐标" ng-click="show_map_dialog(data)"></span>
         </td>
         <td>
           <a href="javascript:;" ng-click="edit_build(data)">修改</a>
-          <a class="btn-del" href="javascript:;" ng-click="del_build(data.id)">删除</a>
+          <a class="btn-del" href="javascript:;" ng-click="del_build(data.playerid)">删除</a>
         </td>
       </tr>
       <tr>
         <td>
-          <img src="" alt="" ng-src="{{build.imgUrl}}">
+          <img src="" alt="" ng-src="{{build.avatar}}">
           <div class="upload" type="file" ngf-select="upload_build($file)" accept="image/*" ngf-max-height="100000" ngf-max-size="10MB">上传图标</div>
         </td>
         <td><input type="text" class="form-control" placeholder="请输入名称" ng-model="build.name"></td>
@@ -80,7 +80,7 @@
           <input type="text" class="form-control" placeholder="请输入电话号码" ng-model="build.tel">
         </td>
         <td>
-          <span>{{build.coordinate}}</span>
+          <span>{{data.lng}}, {{data.lat}}</span>
           <span class="glyphicon glyphicon-map-marker set-font-size" title="点击设置坐标" ng-click="show_map_dialog(data)"></span>
         </td>
         <td>
@@ -97,37 +97,29 @@
         <th>姓名</th>
         <th>性别</th>
         <th>手机号</th>
-        <th>角色</th>
         <th>操作</th>
       </tr>
     </thead>
     <tbody>
       <tr ng-repeat="data in players">
         <td class="wd18">
-          <img ng-src="{{data.imgUrl}}" alt="">
+          <img ng-src="{{data.avatar}}" alt="">
         </td>
-        <td class="wd16">{{data.name}}</td>
-        <td class="wd16">{{data.sex}}</td>
-        <td class="wd16">{{data.phone}}</td>
-        <td class="wd16">{{data.role}}</td>
-        <td class="wd18">
+        <td class="wd20">{{data.name}}</td>
+        <td class="wd20">{{data.tel}}</td>
+        <td class="wd20">{{data.role}}</td>
+        <td class="wd22">
           <a href="javascript:;" ng-click="edit_player(data)">修改</a>
-          <a class="btn-del" href="javascript:;" ng-click="del_player(data.id)">删除</a>
+          <a class="btn-del" href="javascript:;" ng-click="del_player(data.playerid)">删除</a>
         </td>
       </tr>
       <tr>
         <td>
-          <img src="" alt="" ng-src="{{player.imgUrl}}">
+          <img src="" alt="" ng-src="{{player.avatar}}">
           <div class="upload" type="file" ngf-select="upload_player($file)" accept="image/*" ngf-max-height="100000" ngf-max-size="10MB">上传头像</div>
         </td>
         <td><input type="text" class="form-control" placeholder="请输入姓名" ng-model="player.name"></td>
-        <td>
-          <select class="form-control" ng-model="player.sex">
-            <option value="男">男</option>
-            <option value="女">女</option>
-          </select>
-        </td>
-        <td><input type="text" class="form-control" placeholder="请输入手机号" ng-model="player.phone"></td>
+        <td><input type="text" class="form-control" placeholder="请输入手机号" ng-model="player.tel"></td>
         <td>
           <select class="form-control" ng-model="player.role">
             <option value="逃亡者">逃亡者</option>
@@ -186,7 +178,7 @@
   <div class="row edit_build_dialog mb10">
     <label class="col-sm-3">建筑图标</label>
     <div class="col-sm-9">
-      <img src="" alt="" ng-src="{{buildEdit.imgUrl}}">
+      <img src="" alt="" ng-src="{{buildEdit.avatar}}">
       <div class="upload dialog-upload" type="file" ngf-select="edit_upload_build($file)" accept="image/*" ngf-max-height="100000"
         ngf-max-size="10MB">上传图标</div>
     </div>
@@ -195,6 +187,18 @@
     <label class="col-sm-3">名称</label>
     <div class="col-sm-9">
       <input type="text" class="form-control" placeholder="请输入名称" ng-model="buildEdit.name">
+    </div>
+  </div>
+  <div class="row mb10">
+    <label class="col-sm-3">角色</label>
+    <div class="col-sm-9">
+      <select class="form-control" ng-options="role.name as role.name for role in roleList" ng-model="buildEdit.role"></select>
+    </div>
+  </div>
+  <div class="row mb10">
+    <label class="col-sm-3">电话</label>
+    <div class="col-sm-9">
+      <input type="text" class="form-control" placeholder="请输入电话" ng-model="buildEdit.tel">
     </div>
   </div>
   <div class="row">
@@ -207,7 +211,7 @@
   <div class="row edit_build_dialog mb10">
     <label class="col-sm-3">选手头像</label>
     <div class="col-sm-9">
-      <img src="" alt="" ng-src="{{playerEdit.imgUrl}}">
+      <img src="" alt="" ng-src="{{playerEdit.avatar}}">
       <div class="upload dialog-upload" type="file" ngf-select="edit_upload_player($file)" accept="image/*" ngf-max-height="100000"
         ngf-max-size="10MB">上传头像</div>
     </div>
@@ -219,18 +223,9 @@
     </div>
   </div>
   <div class="row mb10">
-    <label class="col-sm-3">性别</label>
-    <div class="col-sm-9">
-      <select class="form-control" ng-model="playerEdit.sex">
-        <option value="男">男</option>
-        <option value="女">女</option>
-      </select>
-    </div>
-  </div>
-  <div class="row mb10">
     <label class="col-sm-3">手机号</label>
     <div class="col-sm-9">
-      <input type="text" class="form-control" placeholder="请输入手机号" ng-model="playerEdit.phone">
+      <input type="text" class="form-control" placeholder="请输入手机号" ng-model="playerEdit.tel">
     </div>
   </div>
   <div class="row mb10">
