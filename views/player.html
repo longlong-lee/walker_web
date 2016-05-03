@@ -158,7 +158,8 @@
       </div>
     </div>
     <div class="col-sm-2 remark">
-      {{editData.player.role}}
+     <div>{{editData.player.role}}</div>
+     <div>{{editData.player.status}}</div>
     </div>
     <div class="col-sm-6">
       <div class="row color1">
@@ -170,7 +171,11 @@
       <div class="row color2">
         <div class="col-sm-3">{{editData.player.money}}</div>
         <div class="col-sm-3">{{editData.player.rank}}</div>
-        <div class="col-sm-3">{{editData.player.tudou}}</div>
+        <div class="col-sm-3">
+          <span ng-hide="isEditTuDou" class="crp" ng-click="showEditTuDou()">{{editData.player.tudou}}</span>
+          <span ng-show="isEditTuDou">
+            <input type="text"class="form-control" ng-model="editData.player.tudou" ng-blur="editTuDou()"></span>
+        </div>
         <div class="col-sm-3">{{editData.player.moneyRank}}</div>
       </div>
     </div>

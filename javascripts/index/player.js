@@ -82,5 +82,23 @@ module.exports = ['$scope', '$state', 'ngDialog', 'notify', '$resource', '$inter
           notify({ message: '数目修改失败', duration: 10000, classes: 'alert-danger' });
         });
     };
+    $scope.isEditTuDou = false;
+    $scope.showEditTuDou = function () {
+      $scope.isEditTuDou = true;
+    };
+    $scope.editTuDou = function () {
+      $resource('/walker/player/:id').save({
+        id: $scope.editData.player.playerid
+      }, {
+          tudou: $scope.editData.player.tudou
+        }).$promise.then(function (data) {
+          notify({ message: '土豆值修改成功', duration: 10000, classes: 'alert-success' });
+          $scope.editDataOrigin.player.tudou = $scope.editData.player.tudou;
+          $scope.isEditTuDou = false;
+          $scope.getPlayers();
+        }, function (data) {
+          notify({ message: '土豆值修改失败', duration: 10000, classes: 'alert-danger' });
+        });
+    };
   }
 ];
