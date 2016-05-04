@@ -161,7 +161,7 @@
      <div>{{editData.player.role}}</div>
      <div>{{editData.player.status}}</div>
     </div>
-    <div class="col-sm-6">
+    <div class="col-sm-8">
       <div class="row color1">
         <div class="col-sm-3">人气值</div>
         <div class="col-sm-3">排名</div>
@@ -174,7 +174,12 @@
         <div class="col-sm-3">
           <span ng-hide="isEditTuDou" class="crp" ng-click="showEditTuDou()">{{editData.player.tudou}}</span>
           <span ng-show="isEditTuDou">
-            <input type="text"class="form-control" ng-model="editData.player.tudou" ng-blur="editTuDou()"></span>
+            <input type="text"class="form-control" ng-model="editData.player.edit_tuDou">
+          </span>
+          <span class="btn-group" ng-show="isEditTuDou">
+            <button class="btn btn-dialog-2 edit-tudou" ng-click="editTuDou()">增加</button>
+            <button class="btn btn-dialog-2 edit-tudou" ng-click="cancle_editTuDou()">取消</button>
+          </span>
         </div>
         <div class="col-sm-3">{{editData.player.moneyRank}}</div>
       </div>

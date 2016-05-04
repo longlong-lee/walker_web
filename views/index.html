@@ -35,7 +35,9 @@
   <div ui-view="tab"></div>
 </div>
 <script type="text/ng-template" id="notice_dialog">
-  <div class="alert" ng-class="{'alert-success': $odd, 'alert-info': $even}" ng-repeat="data in noticeList">
-    {{data.create_time}} : {{data.content}}
+  <div class="modal-body">
+    <div class="alert" ng-class="{'alert-success': $odd, 'alert-info': $even}" ng-repeat="data in noticeList">
+      {{data.create_time}} : {{data.content}}
+    </div>
   </div>
 </script>

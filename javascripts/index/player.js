@@ -1,7 +1,7 @@
 'use strict';
 
-module.exports = ['$scope', '$state', 'ngDialog', 'notify', '$resource', '$interval',
-  function ($scope, $state, ngDialog, notify, $resource, $interval) {
+module.exports = ['$scope', '$state', 'notify', '$resource', '$interval', '$uibModal',
+  function ($scope, $state, notify, $resource, $interval, $uibModal) {
     $scope.getPlayers = function () {
       $resource('/walker/player/list')
         .get(function (data) {
@@ -18,13 +18,10 @@ module.exports = ['$scope', '$state', 'ngDialog', 'notify', '$resource', '$inter
       $scope.editDataOrigin = data;
       $scope.editData = angular.copy(data);
       $scope.isShowDiv = true;
-      ngDialog.open({
-        template: 'dialog',
+      $uibModal.open({
+        templateUrl: 'dialog',
         scope: $scope,
-        className: 'ngdialog-theme-default',
-        showClose: true,
-        closeByDocument: false,
-        trapFocus: false
+        size: 'md'
       });
     };
     $scope.roleList = [{
@@ -85,6 +82,7 @@ module.exports = ['$scope', '$state', 'ngDialog', 'notify', '$resource', '$inter
     $scope.isEditTuDou = false;
     $scope.showEditTuDou = function () {
       $scope.isEditTuDou = true;
+      $scope.editData.player.edit_tuDou = 0;
     };
     $scope.editTuDou = function () {
       $resource('/walker/player/:id').save({
@@ -93,12 +91,16 @@ module.exports = ['$scope', '$state', 'ngDialog', 'notify', '$resource', '$inter
           tudou: parseInt($scope.editData.player.tudou, 10)
         }).$promise.then(function (data) {
           notify({ message: '土豆值修改成功', duration: 10000, classes: 'alert-success' });
+          $scope.editData.player.tudou = parseInt($scope.editData.player.tudou, 10) + parseInt($scope.editData.player.edit_tuDou, 10);
           $scope.editDataOrigin.player.tudou = $scope.editData.player.tudou;
           $scope.isEditTuDou = false;
           $scope.getPlayers();
         }, function (data) {
           notify({ message: '土豆值修改失败', duration: 10000, classes: 'alert-danger' });
         });
+    };
+    $scope.cancle_editTuDou = function (){
+      $scope.isEditTuDou = false;
     };
   }
 ];

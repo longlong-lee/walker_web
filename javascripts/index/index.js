@@ -1,7 +1,7 @@
 'use strict';
 
-module.exports = ['$scope', '$state', 'notify', '$resource', 'ngDialog',
-  function ($scope, $state, notify, $resource, ngDialog) {
+module.exports = ['$scope', '$state', 'notify', '$resource', '$uibModal',
+  function ($scope, $state, notify, $resource, $uibModal) {
     if ($state.current.name === 'index') {
       $state.go('index.player');
       $scope.sref = 'index.player';
@@ -37,12 +37,10 @@ module.exports = ['$scope', '$state', 'notify', '$resource', 'ngDialog',
         });
     };
     $scope.showNotice = function () {
-      ngDialog.open({
-        template: 'notice_dialog',
+      $uibModal.open({
+        templateUrl: 'notice_dialog',
         scope: $scope,
-        className: 'ngdialog-theme-default notice-dialog',
-        showClose: false,
-        closeByDocument: true
+        size: 'notice-dialog'
       });
     };
   }

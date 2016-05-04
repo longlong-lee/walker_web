@@ -1,58 +1,60 @@
 'use strict';
 
-module.exports = ['$scope', '$state', 'Upload', 'notify', '$resource', 'ngDialog',
-  function ($scope, $state, Upload, notify, $resource, ngDialog) {
+module.exports = ['$scope', '$state', 'Upload', 'notify', '$resource', '$uibModal',
+  function ($scope, $state, Upload, notify, $resource, $uibModal) {
     //------------------地图模块开始----------------------
     $scope.clickPosition = null;
     $scope.show_map_dialog = function (data) {
-      if (data && data.coordinate) {
+      if (data && data.lng && data.lat) {
         $scope.editBuildData = data;
         $scope.edit_build_mode = true;
       } else if (data && data.center) {
         $scope.editSettingData = data;
         $scope.edit_setting_mode = true;
       }
-      ngDialog.open({
-        template: 'map_dialog',
+      $scope.modal = $uibModal.open({
+        templateUrl: 'map_dialog',
         scope: $scope,
-        className: 'ngdialog-theme-default',
-        showClose: false,
-        closeByDocument: false
+        size: 'md'
+      });
+      $scope.modal.rendered.then(function () {
+        var map = new AMap.Map('mapContainer');
+        if (map.r) {
+          map.setZoom(10);
+          if ($scope.edit_build_mode) {
+            var position = new AMap.LngLat($scope.editBuildData.lng, $scope.editBuildData.lat);
+            map.setCenter([$scope.editBuildData.lng, $scope.editBuildData.lat]);
+            new AMap.Marker({
+              position: position,
+              map: map
+            });
+          } else if ($scope.edit_setting_mode) {
+            var position = new AMap.LngLat($scope.editSettingData.center.lng, $scope.editSettingData.center.lat);
+            map.setCenter([$scope.editSettingData.center.lng, $scope.editSettingData.center.lat]);
+            new AMap.Marker({
+              position: position,
+              map: map
+            });
+          } else {
+            map.setCenter([$scope.settings.center.lng, $scope.settings.center.lat]);
+          }
+          var _onClick = function (e) {
+            map.clearMap();
+            new AMap.Marker({
+              position: e.lnglat,
+              map: map
+            });
+            $scope.clickPositionLng = e.lnglat.lng; //经度 - lng
+            $scope.clickPositionLat = e.lnglat.lat; //纬度 - lat
+          };
+          map.on('click', _onClick);
+        }
+      });
+      $scope.modal.closed.then(function () {
+        $scope.edit_setting_mode = false;
+        $scope.edit_build_mode = false;
       });
     };
-    $scope.$on('ngDialog.opened', function (e, $dialog) {
-      var map = new AMap.Map('mapContainer');
-      if (map.r) {
-        map.setZoom(10);
-        if ($scope.edit_build_mode) {
-          var position = new AMap.LngLat($scope.editBuildData.lng, $scope.editBuildData.lat);
-          map.setCenter([$scope.editBuildData.lng, $scope.editBuildData.lat]);
-          new AMap.Marker({
-            position: position,
-            map: map
-          });
-        } else if ($scope.edit_setting_mode) {
-          var position = new AMap.LngLat($scope.editSettingData.center.lng, $scope.editSettingData.center.lat);
-          map.setCenter([$scope.editSettingData.center.lng, $scope.editSettingData.center.lat]);
-          new AMap.Marker({
-            position: position,
-            map: map
-          });
-        } else {
-          map.setCenter([120.619914, 31.297599]);
-        }
-        var _onClick = function (e) {
-          map.clearMap();
-          new AMap.Marker({
-            position: e.lnglat,
-            map: map
-          });
-          $scope.clickPositionLng = e.lnglat.lng; //经度 - lng
-          $scope.clickPositionLat = e.lnglat.lat; //纬度 - lat
-        };
-        map.on('click', _onClick);
-      }
-    });
     $scope.set_map_position = function () {
       if ($scope.edit_build_mode) {
         $scope.editBuildData.lng = $scope.clickPositionLng;
@@ -70,7 +72,7 @@ module.exports = ['$scope', '$state', 'Upload', 'notify', '$resource', 'ngDialog
             $scope.settings.center.lat = $scope.clickPositionLat;
             $scope.edit_setting_mode = false;
             notify({ message: '修改成功', duration: 10000, classes: 'alert-success' });
-            ngDialog.close();
+            $scope.modal.close();
           }, function (data) {
             notify({ message: '出错啦', duration: 10000, classes: 'alert-danger' });
           });
@@ -78,12 +80,7 @@ module.exports = ['$scope', '$state', 'Upload', 'notify', '$resource', 'ngDialog
         $scope.build.lng = $scope.clickPositionLng;
         $scope.build.lat = $scope.clickPositionLat;
       }
-      ngDialog.close();
-    };
-    $scope.set_map_position_colse = function () {
-      $scope.edit_setting_mode = false;
-      $scope.edit_build_mode = false;
-      ngDialog.close();
+      $scope.modal.close();
     };
     //-----------------------地图模块结束-----------------------
     //------------------区域设置模块开始----------------------
@@ -104,12 +101,10 @@ module.exports = ['$scope', '$state', 'Upload', 'notify', '$resource', 'ngDialog
         switch: data.distanceWarning.warningSwitch,
         distance: data.distanceWarning.distance
       };
-      ngDialog.open({
-        template: 'edit_setting_dialog',
+      $scope.modal = $uibModal.open({
+        templateUrl: 'edit_setting_dialog',
         scope: $scope,
-        className: 'ngdialog-theme-default edit_setting_dialog',
-        showClose: false,
-        closeByDocument: false
+        size: 'edit-setting-dialog'
       });
     };
     $scope.update_setting = function () {
@@ -128,7 +123,7 @@ module.exports = ['$scope', '$state', 'Upload', 'notify', '$resource', 'ngDialog
           $scope.settings.distanceWarning.warningSwitch = data.switch;
           $scope.settings.distanceWarning.distance = data.distance;
           notify({ message: '修改成功', duration: 10000, classes: 'alert-success' });
-          ngDialog.close();
+          $scope.modal.close();
         }, function (data) {
           notify({ message: '出错啦', duration: 10000, classes: 'alert-danger' });
         });
@@ -165,32 +160,32 @@ module.exports = ['$scope', '$state', 'Upload', 'notify', '$resource', 'ngDialog
 
       // }).$promise.then(function (data) {
       //   if (data.success) {
-          $scope.buildings = [{
-            playerid: '1',
-            avatar: 'http://picset.tudou.com/2016-04-30/1461998878190-2089056432-diyup.jpg',
-            name: '赌场',
-            role: '赌场',
-            tel: '123123123',
-            lng: '121.49393',
-            lat: '31.192231'
-          }, {
-              playerid: '2',
-              avatar: 'http://picset.tudou.com/2016-04-30/1461998878190-2089056432-diyup.jpg',
-              name: '监狱',
-              role: '监狱',
-              tel: '33333333',
-              lng: '121.651858',
-              lat: '31.044096'
-            }, {
-              playerid: '3',
-              avatar: 'http://picset.tudou.com/2016-04-30/1461998878190-2089056432-diyup.jpg',
-              name: '角斗场',
-              role: '角斗场',
-              tel: '44444444444',
-              lng: '120.621969',
-              lat: '31.281598'
-            }
-          ];
+      $scope.buildings = [{
+        playerid: '1',
+        avatar: 'http://picset.tudou.com/2016-04-30/1461998878190-2089056432-diyup.jpg',
+        name: '赌场',
+        role: '赌场',
+        tel: '123123123',
+        lng: '121.49393',
+        lat: '31.192231'
+      }, {
+          playerid: '2',
+          avatar: 'http://picset.tudou.com/2016-04-30/1461998878190-2089056432-diyup.jpg',
+          name: '监狱',
+          role: '监狱',
+          tel: '33333333',
+          lng: '121.651858',
+          lat: '31.044096'
+        }, {
+          playerid: '3',
+          avatar: 'http://picset.tudou.com/2016-04-30/1461998878190-2089056432-diyup.jpg',
+          name: '角斗场',
+          role: '角斗场',
+          tel: '44444444444',
+          lng: '120.621969',
+          lat: '31.281598'
+        }
+      ];
       //   } else {
       //     notify({ message: '出错啦', duration: 10000, classes: 'alert-danger' });
       //   }
@@ -265,7 +260,6 @@ module.exports = ['$scope', '$state', 'Upload', 'notify', '$resource', 'ngDialog
           }).$promise.then(function (data) {
             if (data.success) {
               notify({ message: '添加特殊建筑成功', duration: 2000, classes: 'alert-success' });
-              ngDialog.close();
             } else {
               notify({ message: '添加特殊建筑失败：' + data.data, duration: 10000, classes: 'alert-danger' });
             }
@@ -290,7 +284,6 @@ module.exports = ['$scope', '$state', 'Upload', 'notify', '$resource', 'ngDialog
         }).$promise.then(function (data) {
           if (data.success) {
             notify({ message: '删除特殊建筑成功', duration: 2000, classes: 'alert-success' });
-            ngDialog.close();
           } else {
             notify({ message: '删除特殊建筑失败：' + data.data, duration: 10000, classes: 'alert-danger' });
           }
@@ -307,12 +300,10 @@ module.exports = ['$scope', '$state', 'Upload', 'notify', '$resource', 'ngDialog
         role: data.role,
         tel: data.tel
       };
-      ngDialog.open({
-        template: 'edit_build_dialog',
+      $scope.modal = $uibModal.open({
+        templateUrl: 'edit_build_dialog',
         scope: $scope,
-        className: 'ngdialog-theme-default edit_build_dialog',
-        showClose: true,
-        closeByDocument: false
+        size: 'edit-build-dialog'
       });
     };
     // 编辑建筑物时  --  上传图标
@@ -345,7 +336,6 @@ module.exports = ['$scope', '$state', 'Upload', 'notify', '$resource', 'ngDialog
       $scope.editBuildData.name = $scope.buildEdit.name;
       $scope.editBuildData.role = $scope.buildEdit.role;
       $scope.editBuildData.tel = $scope.buildEdit.tel;
-      ngDialog.close();
       $resource('/walker/player/building').save({
         id: $scope.buildEditId
       }, {
@@ -353,6 +343,7 @@ module.exports = ['$scope', '$state', 'Upload', 'notify', '$resource', 'ngDialog
         }).$promise.then(function (data) {
           if (data.success) {
             notify({ message: '修改成功', duration: 10000, classes: 'alert-success' });
+            $scope.modal.close();
           } else {
             notify({ message: '出错啦', duration: 10000, classes: 'alert-danger' });
           }
@@ -366,7 +357,10 @@ module.exports = ['$scope', '$state', 'Upload', 'notify', '$resource', 'ngDialog
       avatar: '',
       name: '',
       tel: '',
-      role: ''
+      role: '',
+      zburl: '',
+      playerid: '',
+      room_id: ''
     };
     $scope.isAddPlayer = false;
     // 查询选手
@@ -380,19 +374,25 @@ module.exports = ['$scope', '$state', 'Upload', 'notify', '$resource', 'ngDialog
         avatar: 'http://picset.tudou.com/2016-04-30/1461998878190-2089056432-diyup.jpg',
         name: '小明',
         tel: '123456789',
-        role: '逃亡者'
+        role: '逃亡者',
+        zburl: '123',
+        room_id: '2323'
       }, {
           playerid: '2',
           avatar: 'http://picset.tudou.com/2016-04-30/1461998878190-2089056432-diyup.jpg',
           name: '旺财',
           tel: '546895248',
-          role: '追击者'
+          role: '追击者',
+          zburl: '123123',
+          room_id: '3434'
         }, {
           playerid: '3',
           avatar: 'http://picset.tudou.com/2016-04-30/1461998878190-2089056432-diyup.jpg',
           name: '静静',
           tel: '7895468924',
-          role: '追击者'
+          role: '追击者',
+          zburl: '3434',
+          room_id: '343434'
         }
       ];
       //   } else {
@@ -427,10 +427,30 @@ module.exports = ['$scope', '$state', 'Upload', 'notify', '$resource', 'ngDialog
         });
       }
     };
+    //增加选手弹出框
+    $scope.add_player_dialog = function () {
+      $scope.modal = $uibModal.open({
+        templateUrl: 'add_player_dialog',
+        scope: $scope,
+        size: 'edit-build-dialog'
+      });
+    };
     // 增加选手时 -- 校验必填
     $scope.valid_player = function () {
       if (!$scope.player.avatar) {
         notify({ message: '请上传选手头像', duration: 10000, classes: 'alert-danger' });
+        return false;
+      }
+      if (!($scope.player.zburl)) {
+        notify({ message: '请填写直播url', duration: 10000, classes: 'alert-danger' });
+        return false;
+      }
+      if (!($scope.player.playerid)) {
+        notify({ message: '请填写选手id', duration: 10000, classes: 'alert-danger' });
+        return false;
+      }
+      if (!($scope.player.room_id)) {
+        notify({ message: '请填写房间id', duration: 10000, classes: 'alert-danger' });
         return false;
       }
       if (!($scope.player.name)) {
@@ -456,6 +476,9 @@ module.exports = ['$scope', '$state', 'Upload', 'notify', '$resource', 'ngDialog
         data.name = $scope.player.name;
         data.tel = $scope.player.tel;
         data.role = $scope.player.role;
+        data.zburl = $scope.player.zburl;
+        data.playerid = $scope.player.playerid;
+        data.room_id = $scope.player.room_id;
         $resource('/walker/player').save({
 
         }, {
@@ -463,7 +486,7 @@ module.exports = ['$scope', '$state', 'Upload', 'notify', '$resource', 'ngDialog
           }).$promise.then(function (data) {
             if (data.success) {
               notify({ message: '添加选手成功', duration: 2000, classes: 'alert-success' });
-              ngDialog.close();
+              $scope.modal.close();
             } else {
               notify({ message: '添加选手失败：' + data.data, duration: 10000, classes: 'alert-danger' });
             }
@@ -471,9 +494,11 @@ module.exports = ['$scope', '$state', 'Upload', 'notify', '$resource', 'ngDialog
             $scope.player = {
               avatar: '',
               name: '',
-              sex: '',
-              phone: '',
-              role: ''
+              tel: '',
+              role: '',
+              zburl: '',
+              playerid: '',
+              room_id: ''
             };
           });
       }
@@ -487,7 +512,6 @@ module.exports = ['$scope', '$state', 'Upload', 'notify', '$resource', 'ngDialog
         }).$promise.then(function (data) {
           if (data.success) {
             notify({ message: '删除选手成功', duration: 2000, classes: 'alert-success' });
-            ngDialog.close();
           } else {
             notify({ message: '删除选手失败：' + data.data, duration: 10000, classes: 'alert-danger' });
           }
@@ -502,14 +526,15 @@ module.exports = ['$scope', '$state', 'Upload', 'notify', '$resource', 'ngDialog
         avatar: data.avatar,
         name: data.name,
         tel: data.tel,
-        role: data.role
+        role: data.role,
+        zburl: data.zburl,
+        playerid: data.playerid,
+        room_id: data.room_id
       };
-      ngDialog.open({
-        template: 'edit_player_dialog',
+      $scope.modal = $uibModal.open({
+        templateUrl: 'edit_player_dialog',
         scope: $scope,
-        className: 'ngdialog-theme-default edit_build_dialog',
-        showClose: true,
-        closeByDocument: false
+        size: 'edit-build-dialog'
       });
     };
     // 编辑选手时 -- 上传头像
@@ -542,22 +567,29 @@ module.exports = ['$scope', '$state', 'Upload', 'notify', '$resource', 'ngDialog
       $scope.playerEditData.name = $scope.playerEdit.name;
       $scope.playerEditData.tel = $scope.playerEdit.tel;
       $scope.playerEditData.role = $scope.playerEdit.role;
-      ngDialog.close();
-      // $resource('/walker/player').update({
-      //   type: 'car',
-      //   id: $scope.playerEditId
-      // }, {
-      //     data: $scope.playerEdit
-      //   }).$promise.then(function (data) {
-      //     if (data.success) {
-      //       notify({ message: '修改成功', duration: 10000, classes: 'alert-success' });
-      //     } else {
-      //       notify({ message: '出错啦', duration: 10000, classes: 'alert-danger' });
-      //     }
-      //   }, function (data) {
-      //     notify({ message: '出错啦', duration: 10000, classes: 'alert-danger' });
-      //   });
+      $scope.playerEditData.zburl = $scope.playerEdit.zburl;
+      $scope.playerEditData.playerid = $scope.playerEdit.playerid;
+      $scope.playerEditData.room_id = $scope.playerEdit.room_id;
+
+      $resource('/walker/player').update({
+        type: 'car',
+        id: $scope.playerEditId
+      }, {
+          data: $scope.playerEdit
+        }).$promise.then(function (data) {
+          if (data.success) {
+            notify({ message: '修改成功', duration: 10000, classes: 'alert-success' });
+            $scope.modal.close();
+          } else {
+            notify({ message: '出错啦', duration: 10000, classes: 'alert-danger' });
+          }
+        }, function (data) {
+          notify({ message: '出错啦', duration: 10000, classes: 'alert-danger' });
+        });
     };
     //------------------选手模块开始----------------------
+    $scope.close = function () {
+      $scope.modal.close();
+    };
   }
 ];

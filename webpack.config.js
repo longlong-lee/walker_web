@@ -6,8 +6,8 @@ var common = [
   'angular-ui-router',
   'angular-resource',
   'angular-animate',
-  'ng-dialog',
   'ng-file-upload',
+  'angular-ui-bootstrap',
   './angular-notify.min.js'
 ];
 module.exports = {
