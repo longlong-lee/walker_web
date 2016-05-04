@@ -312,7 +312,7 @@ img.avatar {
 	top: 0px;
 	z-index: 99999;
 	left: 0px;
-	width: 24px;
+	width: 14px;
 	color: #FFF;
 	height: 24px;
 	border-radius: 7px;
@@ -333,7 +333,7 @@ img.avatar {
 }
 .chk:checked + label:after {
 	content: '开启';
-	left: 10px;
+	left: 15px;
 }
 .chk:checked + label:before {
 	content: ' ';
@@ -342,7 +342,7 @@ img.avatar {
 	left: 52px;
 }
 .chk + label:after {
-	left: 35px;	
+	left: 25px;	
 }
 .fl {
   float: left;
