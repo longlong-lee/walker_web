@@ -13,7 +13,7 @@ module.exports = ['$scope', '$state', 'notify', '$resource', '$interval', '$uibM
         });
     };
     $scope.getPlayers();
-    //$interval($scope.getPlayers, 3000);
+    $interval($scope.getPlayers, 3000);
     $scope.editInfo = function (data) {
       $scope.editDataOrigin = data;
       $scope.editData = angular.copy(data);
