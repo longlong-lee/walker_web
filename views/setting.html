@@ -44,17 +44,19 @@
   <table class="table map-table table-hover">
     <thead>
       <tr>
-        <th class="wd17">建筑图标</th>
-        <th class="wd11">名称</th>
-        <th class="wd11">角色</th>
-        <th class="wd11">电话号码</th>
-        <th class="wd32">坐标</th>
-        <th class="wd18">操作</th>
+        <th class="wd10">建筑图标</th>
+        <th class="wd14">建筑id</th>
+        <th class="wd14">名称</th>
+        <th class="wd14">角色</th>
+        <th class="wd14">电话号码</th>
+        <th class="wd20">坐标</th>
+        <th class="wd14">操作</th>
       </tr>
     </thead>
     <tbody>
       <tr ng-repeat="data in buildings">
         <td><img src="" alt="" ng-src="{{data.avatar}}"></td>
+        <td>{{data.playerid}}</td>
         <td>{{data.name}}</td>
         <td>{{data.role}}</td>
         <td>{{data.tel}}</td>
@@ -72,6 +74,7 @@
           <img src="" alt="" ng-src="{{build.avatar}}">
           <div class="upload" type="file" ngf-select="upload_build($file)" accept="image/*" ngf-max-height="100000" ngf-max-size="10MB">上传图标</div>
         </td>
+        <td><input type="text" class="form-control" placeholder="请输入playerid" ng-model="build.playerid"></td>
         <td><input type="text" class="form-control" placeholder="请输入名称" ng-model="build.name"></td>
         <td>
           <select class="form-control" ng-options="role.name as role.name for role in roleList" ng-model="build.role"></select>
@@ -80,7 +83,7 @@
           <input type="text" class="form-control" placeholder="请输入电话号码" ng-model="build.tel">
         </td>
         <td>
-          <span>{{data.lng}}, {{data.lat}}</span>
+          <span>{{build.lng}}, {{build.lat}}</span>
           <span class="glyphicon glyphicon-map-marker set-font-size" title="点击设置坐标" ng-click="show_map_dialog(data)"></span>
         </td>
         <td>
@@ -228,7 +231,7 @@
     <div class="row mb10">
       <label class="col-sm-3">房间id</label>
       <div class="col-sm-9">
-        <input type="text" class="form-control" placeholder="请输入房间id" ng-model="player.room_id">
+        <input type="text" class="form-control" placeholder="请输入房间id" ng-model="player.zbid">
       </div>
     </div>
     <div class="row mb10">
@@ -249,6 +252,7 @@
         <select class="form-control" ng-model="player.role">
         <option value="逃亡者">逃亡者</option>
         <option value="追击者">追击者</option>
+        <option value="候补者">候补者</option>
       </select>
       </div>
     </div>
@@ -284,7 +288,7 @@
     <div class="row mb10">
       <label class="col-sm-3">房间id</label>
       <div class="col-sm-9">
-        <input type="text" class="form-control" placeholder="请输入房间id" ng-model="playerEdit.room_id">
+        <input type="text" class="form-control" placeholder="请输入房间id" ng-model="playerEdit.zbid">
       </div>
     </div>
     <div class="row mb10">
@@ -305,6 +309,7 @@
         <select class="form-control" ng-model="playerEdit.role">
         <option value="逃亡者">逃亡者</option>
         <option value="追击者">追击者</option>
+        <option value="候补者">候补者</option>
       </select>
       </div>
     </div>

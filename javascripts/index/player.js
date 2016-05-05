@@ -88,7 +88,7 @@ module.exports = ['$scope', '$state', 'notify', '$resource', '$interval', '$uibM
       $resource('/walker/player/:id').save({
         id: $scope.editData.player.playerid
       }, {
-          tudou: parseInt($scope.editData.player.tudou, 10)
+          tudou: parseInt($scope.editData.player.edit_tuDou, 10)
         }).$promise.then(function (data) {
           notify({ message: '土豆值修改成功', duration: 10000, classes: 'alert-success' });
           $scope.editData.player.tudou = parseInt($scope.editData.player.tudou, 10) + parseInt($scope.editData.player.edit_tuDou, 10);

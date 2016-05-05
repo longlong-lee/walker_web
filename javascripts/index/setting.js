@@ -57,10 +57,20 @@ module.exports = ['$scope', '$state', 'Upload', 'notify', '$resource', '$uibModa
     };
     $scope.set_map_position = function () {
       if ($scope.edit_build_mode) {
-        $scope.editBuildData.lng = $scope.clickPositionLng;
-        $scope.editBuildData.lat = $scope.clickPositionLat;
-        $scope.edit_build_mode = false;
-        //TODO update 坐标的数据
+        $resource('/walker/player/:id').save({
+          id: $scope.editBuildData.playerid
+        }, {
+            lng: $scope.clickPositionLng + '',
+            lat: $scope.clickPositionLat + ''
+          }).$promise.then(function (data) {
+            $scope.editBuildData.lng = $scope.clickPositionLng + '';
+            $scope.editBuildData.lat = $scope.clickPositionLat + '';
+            $scope.edit_build_mode = false;
+            notify({ message: '修改成功', duration: 10000, classes: 'alert-success' });
+            $scope.modal.close();
+          }, function (data) {
+            notify({ message: '出错啦', duration: 10000, classes: 'alert-danger' });
+          });
       } else if ($scope.edit_setting_mode) {
         $resource('/walker/setting/ ').save({
 
@@ -68,8 +78,8 @@ module.exports = ['$scope', '$state', 'Upload', 'notify', '$resource', '$uibModa
             centerLng: $scope.clickPositionLng + '',
             centerLat: $scope.clickPositionLat + ''
           }).$promise.then(function (req) {
-            $scope.settings.center.lng = $scope.clickPositionLng;
-            $scope.settings.center.lat = $scope.clickPositionLat;
+            $scope.settings.center.lng = $scope.clickPositionLng + '';
+            $scope.settings.center.lat = $scope.clickPositionLat + '';
             $scope.edit_setting_mode = false;
             notify({ message: '修改成功', duration: 10000, classes: 'alert-success' });
             $scope.modal.close();
@@ -79,8 +89,8 @@ module.exports = ['$scope', '$state', 'Upload', 'notify', '$resource', '$uibModa
       } else {
         $scope.build.lng = $scope.clickPositionLng;
         $scope.build.lat = $scope.clickPositionLat;
+        $scope.modal.close();
       }
-      $scope.modal.close();
     };
     //-----------------------地图模块结束-----------------------
     //------------------区域设置模块开始----------------------
@@ -146,6 +156,8 @@ module.exports = ['$scope', '$state', 'Upload', 'notify', '$resource', '$uibModa
         name: '天眼'
       }];
     $scope.build = {
+      playerid: '',
+      zbid: '',
       avatar: '',
       name: '',
       role: '',
@@ -156,42 +168,13 @@ module.exports = ['$scope', '$state', 'Upload', 'notify', '$resource', '$uibModa
     $scope.isAddBuild = false;
     // 查询建筑物
     $scope.query_build = function () {
-      // $resource('/walker/player/building').get({
+      $resource('/walker/player/building/list').query({
 
-      // }).$promise.then(function (data) {
-      //   if (data.success) {
-      $scope.buildings = [{
-        playerid: '1',
-        avatar: 'http://picset.tudou.com/2016-04-30/1461998878190-2089056432-diyup.jpg',
-        name: '赌场',
-        role: '赌场',
-        tel: '123123123',
-        lng: '121.49393',
-        lat: '31.192231'
-      }, {
-          playerid: '2',
-          avatar: 'http://picset.tudou.com/2016-04-30/1461998878190-2089056432-diyup.jpg',
-          name: '监狱',
-          role: '监狱',
-          tel: '33333333',
-          lng: '121.651858',
-          lat: '31.044096'
-        }, {
-          playerid: '3',
-          avatar: 'http://picset.tudou.com/2016-04-30/1461998878190-2089056432-diyup.jpg',
-          name: '角斗场',
-          role: '角斗场',
-          tel: '44444444444',
-          lng: '120.621969',
-          lat: '31.281598'
-        }
-      ];
-      //   } else {
-      //     notify({ message: '出错啦', duration: 10000, classes: 'alert-danger' });
-      //   }
-      // }, function (data) {
-      //   notify({ message: '出错啦', duration: 10000, classes: 'alert-danger' });
-      // });
+      }).$promise.then(function (data) {
+        $scope.buildings = data;
+      }, function (data) {
+        notify({ message: '出错啦', duration: 10000, classes: 'alert-danger' });
+      });
     };
     $scope.query_build();
     // 增加建筑物时 -- 上传图标
@@ -224,6 +207,10 @@ module.exports = ['$scope', '$state', 'Upload', 'notify', '$resource', '$uibModa
         notify({ message: '请上传建筑图标', duration: 10000, classes: 'alert-danger' });
         return false;
       }
+      if (!($scope.build.playerid)) {
+        notify({ message: '请填写建筑id', duration: 10000, classes: 'alert-danger' });
+        return false;
+      }
       if (!($scope.build.name)) {
         notify({ message: '请填写建筑名称', duration: 10000, classes: 'alert-danger' });
         return false;
@@ -247,24 +234,31 @@ module.exports = ['$scope', '$state', 'Upload', 'notify', '$resource', '$uibModa
       if ($scope.valid_build()) {
         $scope.isAddBuild = true;
         var data = {};
+        data.playerid = $scope.build.playerid;
+        data.zbid = $scope.build.playerid, 10;
         data.avatar = $scope.build.avatar;
         data.name = $scope.build.name;
         data.role = $scope.build.role;
         data.tel = $scope.build.tel;
-        data.lng = $scope.build.lng;
-        data.lat = $scope.build.lat;
-        $resource('/walker/player/ ').save({
+        data.lng = $scope.build.lng + '';
+        data.lat = $scope.build.lat + '';
+        $resource('/walker/player/ ', {
 
         }, {
+            put: {
+              method: 'PUT',
+              isArray: false
+            }
+          }).put({
+
+          }, {
             data: data
           }).$promise.then(function (data) {
-            if (data.success) {
-              notify({ message: '添加特殊建筑成功', duration: 2000, classes: 'alert-success' });
-            } else {
-              notify({ message: '添加特殊建筑失败：' + data.data, duration: 10000, classes: 'alert-danger' });
-            }
+            notify({ message: '添加特殊建筑成功', duration: 2000, classes: 'alert-success' });
             $scope.isAddBuild = false;
             $scope.build = {
+              playerid: '',
+              zbid: '',
               avatar: '',
               name: '',
               role: '',
@@ -272,21 +266,22 @@ module.exports = ['$scope', '$state', 'Upload', 'notify', '$resource', '$uibModa
               lng: '',
               lat: ''
             };
+            $scope.query_build();
+          }, function (data) {
+            notify({ message: '添加特殊建筑失败：' + data.data, duration: 10000, classes: 'alert-danger' });
           });
       }
     };
     // 删除建筑物
     $scope.del_build = function (id) {
-      $resource('/walker/player/building').remove({
-
+      $resource('/walker/player/:id').remove({
+        id: id
       }, {
-          id: id
         }).$promise.then(function (data) {
-          if (data.success) {
-            notify({ message: '删除特殊建筑成功', duration: 2000, classes: 'alert-success' });
-          } else {
-            notify({ message: '删除特殊建筑失败：' + data.data, duration: 10000, classes: 'alert-danger' });
-          }
+          notify({ message: '删除特殊建筑成功', duration: 2000, classes: 'alert-success' });
+          $scope.query_build();
+        }, function (data) {
+          notify({ message: '删除特殊建筑失败：' + data.data, duration: 10000, classes: 'alert-danger' });
         });
     };
     $scope.buildEdit = {};
@@ -332,21 +327,17 @@ module.exports = ['$scope', '$state', 'Upload', 'notify', '$resource', '$uibModa
     };
     // 修改建筑物
     $scope.update_build = function () {
-      $scope.editBuildData.avatar = $scope.buildEdit.avatar;
-      $scope.editBuildData.name = $scope.buildEdit.name;
-      $scope.editBuildData.role = $scope.buildEdit.role;
-      $scope.editBuildData.tel = $scope.buildEdit.tel;
-      $resource('/walker/player/building').save({
+      $resource('/walker/player/:id').save({
         id: $scope.buildEditId
       }, {
           data: $scope.buildEdit
         }).$promise.then(function (data) {
-          if (data.success) {
-            notify({ message: '修改成功', duration: 10000, classes: 'alert-success' });
-            $scope.modal.close();
-          } else {
-            notify({ message: '出错啦', duration: 10000, classes: 'alert-danger' });
-          }
+          notify({ message: '修改成功', duration: 10000, classes: 'alert-success' });
+          $scope.editBuildData.avatar = $scope.buildEdit.avatar;
+          $scope.editBuildData.name = $scope.buildEdit.name;
+          $scope.editBuildData.role = $scope.buildEdit.role;
+          $scope.editBuildData.tel = $scope.buildEdit.tel;
+          $scope.modal.close();
         }, function (data) {
           notify({ message: '出错啦', duration: 10000, classes: 'alert-danger' });
         });
@@ -360,47 +351,24 @@ module.exports = ['$scope', '$state', 'Upload', 'notify', '$resource', '$uibModa
       role: '',
       zburl: '',
       playerid: '',
-      room_id: ''
+      zbid: ''
     };
     $scope.isAddPlayer = false;
     // 查询选手
     $scope.query_player = function () {
-      //  $resource('/walker/player').get({
-      //   type: 'car'
-      // }).$promise.then(function (data) {
-      //   if (data.success) {
-      $scope.players = [{
-        playerid: '1',
-        avatar: 'http://picset.tudou.com/2016-04-30/1461998878190-2089056432-diyup.jpg',
-        name: '小明',
-        tel: '123456789',
-        role: '逃亡者',
-        zburl: '123',
-        room_id: '2323'
-      }, {
-          playerid: '2',
-          avatar: 'http://picset.tudou.com/2016-04-30/1461998878190-2089056432-diyup.jpg',
-          name: '旺财',
-          tel: '546895248',
-          role: '追击者',
-          zburl: '123123',
-          room_id: '3434'
-        }, {
-          playerid: '3',
-          avatar: 'http://picset.tudou.com/2016-04-30/1461998878190-2089056432-diyup.jpg',
-          name: '静静',
-          tel: '7895468924',
-          role: '追击者',
-          zburl: '3434',
-          room_id: '343434'
-        }
-      ];
-      //   } else {
-      //     notify({ message: '出错啦', duration: 10000, classes: 'alert-danger' });
-      //   }
-      // }, function (data) {
-      //   notify({ message: '出错啦', duration: 10000, classes: 'alert-danger' });
-      // });
+      $scope.players = [];
+      $resource('/walker/player/list').get({
+      }).$promise.then(function (data) {
+        angular.forEach(data, function (v, k) {
+          angular.forEach(v, function (value, key) {
+            if(value.player){
+              $scope.players.push(value.player);
+            }
+          });
+        });
+      }, function (data) {
+        notify({ message: '出错啦', duration: 10000, classes: 'alert-danger' });
+      });
     };
     $scope.query_player();
     // 增加选手时 -- 上传头像
@@ -449,7 +417,7 @@ module.exports = ['$scope', '$state', 'Upload', 'notify', '$resource', '$uibModa
         notify({ message: '请填写选手id', duration: 10000, classes: 'alert-danger' });
         return false;
       }
-      if (!($scope.player.room_id)) {
+      if (!($scope.player.zbid)) {
         notify({ message: '请填写房间id', duration: 10000, classes: 'alert-danger' });
         return false;
       }
@@ -478,18 +446,21 @@ module.exports = ['$scope', '$state', 'Upload', 'notify', '$resource', '$uibModa
         data.role = $scope.player.role;
         data.zburl = $scope.player.zburl;
         data.playerid = $scope.player.playerid;
-        data.room_id = $scope.player.room_id;
-        $resource('/walker/player').save({
+        data.zbid = $scope.player.zbid;
+        $resource('/walker/player/ ', {
 
         }, {
+            put: {
+              method: 'PUT',
+              isArray: false
+            }
+          }).put({
+
+          }, {
             data: data
           }).$promise.then(function (data) {
-            if (data.success) {
-              notify({ message: '添加选手成功', duration: 2000, classes: 'alert-success' });
-              $scope.modal.close();
-            } else {
-              notify({ message: '添加选手失败：' + data.data, duration: 10000, classes: 'alert-danger' });
-            }
+            notify({ message: '添加选手成功', duration: 2000, classes: 'alert-success' });
+            $scope.modal.close();
             $scope.isAddPlayer = false;
             $scope.player = {
               avatar: '',
@@ -498,23 +469,25 @@ module.exports = ['$scope', '$state', 'Upload', 'notify', '$resource', '$uibModa
               role: '',
               zburl: '',
               playerid: '',
-              room_id: ''
+              zbid: ''
             };
+            $scope.query_player();
+          }, function (data) {
+            notify({ message: '添加选手失败：' + data.data, duration: 10000, classes: 'alert-danger' });
           });
       }
     };
     // 删除选手
     $scope.del_player = function (id) {
-      $resource('/walker/player').remove({
-
+      $resource('/walker/player/:id').remove({
+        id: id
       }, {
-          id: id
+
         }).$promise.then(function (data) {
-          if (data.success) {
-            notify({ message: '删除选手成功', duration: 2000, classes: 'alert-success' });
-          } else {
-            notify({ message: '删除选手失败：' + data.data, duration: 10000, classes: 'alert-danger' });
-          }
+          notify({ message: '删除选手成功', duration: 2000, classes: 'alert-success' });
+          $scope.query_player();
+        }, function (data) {
+          notify({ message: '删除选手失败：' + data.data, duration: 10000, classes: 'alert-danger' });
         });
     };
     $scope.playerEdit = {};
@@ -529,7 +502,7 @@ module.exports = ['$scope', '$state', 'Upload', 'notify', '$resource', '$uibModa
         role: data.role,
         zburl: data.zburl,
         playerid: data.playerid,
-        room_id: data.room_id
+        zbid: data.zbid
       };
       $scope.modal = $uibModal.open({
         templateUrl: 'edit_player_dialog',
@@ -563,26 +536,20 @@ module.exports = ['$scope', '$state', 'Upload', 'notify', '$resource', '$uibModa
     };
     // 修改选手
     $scope.update_player = function () {
-      $scope.playerEditData.avatar = $scope.playerEdit.avatar;
-      $scope.playerEditData.name = $scope.playerEdit.name;
-      $scope.playerEditData.tel = $scope.playerEdit.tel;
-      $scope.playerEditData.role = $scope.playerEdit.role;
-      $scope.playerEditData.zburl = $scope.playerEdit.zburl;
-      $scope.playerEditData.playerid = $scope.playerEdit.playerid;
-      $scope.playerEditData.room_id = $scope.playerEdit.room_id;
-
-      $resource('/walker/player').update({
-        type: 'car',
+      $resource('/walker/player/:id').save({
         id: $scope.playerEditId
       }, {
           data: $scope.playerEdit
         }).$promise.then(function (data) {
-          if (data.success) {
-            notify({ message: '修改成功', duration: 10000, classes: 'alert-success' });
-            $scope.modal.close();
-          } else {
-            notify({ message: '出错啦', duration: 10000, classes: 'alert-danger' });
-          }
+          notify({ message: '修改成功', duration: 10000, classes: 'alert-success' });
+          $scope.modal.close();
+          $scope.playerEditData.avatar = $scope.playerEdit.avatar;
+          $scope.playerEditData.name = $scope.playerEdit.name;
+          $scope.playerEditData.tel = $scope.playerEdit.tel;
+          $scope.playerEditData.role = $scope.playerEdit.role;
+          $scope.playerEditData.zburl = $scope.playerEdit.zburl;
+          $scope.playerEditData.playerid = $scope.playerEdit.playerid;
+          $scope.playerEditData.zbid = $scope.playerEdit.zbid;
         }, function (data) {
           notify({ message: '出错啦', duration: 10000, classes: 'alert-danger' });
         });

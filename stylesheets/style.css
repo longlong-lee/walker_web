@@ -359,17 +359,23 @@ img.avatar {
 .wd0 {
   width: 0%;
 }
+.wd10 {
+  width: 10%;
+}
 .wd11 {
-  width: 11%
+  width: 11%;
+}
+.wd14 {
+  width: 14%;
 }
 .wd16 {
-  width: 16%
+  width: 16%;
 }
 .wd18 {
-  width: 18%
+  width: 18%;
 }
 .wd20 {
-  width: 20%
+  width: 20%;
 }
 .wd32 {
   width: 32%;

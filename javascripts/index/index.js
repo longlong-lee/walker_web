@@ -20,10 +20,8 @@ module.exports = ['$scope', '$state', 'notify', '$resource', '$uibModal',
 
       }, $scope.notice)
         .$promise.then(function (data) {
-          debugger;
           notify({ message: '公告发送成功', duration: 10000, classes: 'alert-success' });
         }, function (data) {
-          debugger;
           notify({ message: '公告发送失败', duration: 10000, classes: 'alert-danger' });
         });
     };
