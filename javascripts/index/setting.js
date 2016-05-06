@@ -251,9 +251,7 @@ module.exports = ['$scope', '$state', 'Upload', 'notify', '$resource', '$uibModa
             }
           }).put({
 
-          }, {
-            data: data
-          }).$promise.then(function (data) {
+          }, data).$promise.then(function (data) {
             notify({ message: '添加特殊建筑成功', duration: 2000, classes: 'alert-success' });
             $scope.isAddBuild = false;
             $scope.build = {
@@ -329,9 +327,7 @@ module.exports = ['$scope', '$state', 'Upload', 'notify', '$resource', '$uibModa
     $scope.update_build = function () {
       $resource('/walker/player/:id').save({
         id: $scope.buildEditId
-      }, {
-          data: $scope.buildEdit
-        }).$promise.then(function (data) {
+      }, $scope.buildEdit).$promise.then(function (data) {
           notify({ message: '修改成功', duration: 10000, classes: 'alert-success' });
           $scope.editBuildData.avatar = $scope.buildEdit.avatar;
           $scope.editBuildData.name = $scope.buildEdit.name;
@@ -456,9 +452,7 @@ module.exports = ['$scope', '$state', 'Upload', 'notify', '$resource', '$uibModa
             }
           }).put({
 
-          }, {
-            data: data
-          }).$promise.then(function (data) {
+          }, data).$promise.then(function (data) {
             notify({ message: '添加选手成功', duration: 2000, classes: 'alert-success' });
             $scope.modal.close();
             $scope.isAddPlayer = false;
@@ -538,9 +532,7 @@ module.exports = ['$scope', '$state', 'Upload', 'notify', '$resource', '$uibModa
     $scope.update_player = function () {
       $resource('/walker/player/:id').save({
         id: $scope.playerEditId
-      }, {
-          data: $scope.playerEdit
-        }).$promise.then(function (data) {
+      }, $scope.playerEdit).$promise.then(function (data) {
           notify({ message: '修改成功', duration: 10000, classes: 'alert-success' });
           $scope.modal.close();
           $scope.playerEditData.avatar = $scope.playerEdit.avatar;
