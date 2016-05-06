@@ -9,5 +9,6 @@ angular.module('app', [
   'ui.bootstrap'
 ])
   .config(require('./routing.js'))
+  .run(require('./routSetting.js'))
   .filter('nameFilter', require('./nameFil.js'))
   .filter('toolFilter', require('./toolFil.js'));

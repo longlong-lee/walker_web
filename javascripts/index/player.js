@@ -1,7 +1,7 @@
 'use strict';
 
-module.exports = ['$scope', '$state', 'notify', '$resource', '$interval', '$uibModal',
-  function ($scope, $state, notify, $resource, $interval, $uibModal) {
+module.exports = ['$scope', '$rootScope', 'notify', '$resource', '$interval', '$uibModal',
+  function ($scope, $rootScope, notify, $resource, $interval, $uibModal) {
     $scope.getPlayers = function () {
       $resource('/walker/player/list')
         .get(function (data) {
@@ -13,7 +13,7 @@ module.exports = ['$scope', '$state', 'notify', '$resource', '$interval', '$uibM
         });
     };
     $scope.getPlayers();
-    $interval($scope.getPlayers, 30000);
+    $rootScope.timer = $interval($scope.getPlayers, 30000);
     $scope.editInfo = function (data) {
       $scope.editDataOrigin = data;
       $scope.editData = angular.copy(data);

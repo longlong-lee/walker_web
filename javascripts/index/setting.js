@@ -272,12 +272,21 @@ module.exports = ['$scope', '$state', 'Upload', 'notify', '$resource', '$uibModa
     };
     // 删除建筑物
     $scope.del_build = function (id) {
+      $scope.del_build_id = id;
+      $scope.modal = $uibModal.open({
+        templateUrl: 'remove_build_dialog',
+        scope: $scope,
+        size: 'edit-setting-dialog'
+      });
+    };
+    $scope.remove_build = function () {
       $resource('/walker/player/:id').remove({
-        id: id
+        id: $scope.del_build_id
       }, {
         }).$promise.then(function (data) {
           notify({ message: '删除特殊建筑成功', duration: 2000, classes: 'alert-success' });
           $scope.query_build();
+          $scope.close();
         }, function (data) {
           notify({ message: '删除特殊建筑失败：' + data.data, duration: 10000, classes: 'alert-danger' });
         });
@@ -328,15 +337,15 @@ module.exports = ['$scope', '$state', 'Upload', 'notify', '$resource', '$uibModa
       $resource('/walker/player/:id').save({
         id: $scope.buildEditId
       }, $scope.buildEdit).$promise.then(function (data) {
-          notify({ message: '修改成功', duration: 10000, classes: 'alert-success' });
-          $scope.editBuildData.avatar = $scope.buildEdit.avatar;
-          $scope.editBuildData.name = $scope.buildEdit.name;
-          $scope.editBuildData.role = $scope.buildEdit.role;
-          $scope.editBuildData.tel = $scope.buildEdit.tel;
-          $scope.modal.close();
-        }, function (data) {
-          notify({ message: '出错啦', duration: 10000, classes: 'alert-danger' });
-        });
+        notify({ message: '修改成功', duration: 10000, classes: 'alert-success' });
+        $scope.editBuildData.avatar = $scope.buildEdit.avatar;
+        $scope.editBuildData.name = $scope.buildEdit.name;
+        $scope.editBuildData.role = $scope.buildEdit.role;
+        $scope.editBuildData.tel = $scope.buildEdit.tel;
+        $scope.modal.close();
+      }, function (data) {
+        notify({ message: '出错啦', duration: 10000, classes: 'alert-danger' });
+      });
     };
     //------------------建筑模块开始----------------------
     //------------------选手模块开始----------------------
@@ -352,16 +361,9 @@ module.exports = ['$scope', '$state', 'Upload', 'notify', '$resource', '$uibModa
     $scope.isAddPlayer = false;
     // 查询选手
     $scope.query_player = function () {
-      $scope.players = [];
-      $resource('/walker/player/list').get({
+      $resource('/walker/player/simplelist').query({
       }).$promise.then(function (data) {
-        angular.forEach(data, function (v, k) {
-          angular.forEach(v, function (value, key) {
-            if(value.player){
-              $scope.players.push(value.player);
-            }
-          });
-        });
+        $scope.players = data;
       }, function (data) {
         notify({ message: '出错啦', duration: 10000, classes: 'alert-danger' });
       });
@@ -471,19 +473,27 @@ module.exports = ['$scope', '$state', 'Upload', 'notify', '$resource', '$uibModa
           });
       }
     };
-    // 删除选手
+    //删除选手
     $scope.del_player = function (id) {
+      $scope.del_player_id = id;
+      $scope.modal = $uibModal.open({
+        templateUrl: 'remove_player_dialog',
+        scope: $scope,
+        size: 'edit-setting-dialog'
+      });
+    };
+    $scope.remove_player = function () {
       $resource('/walker/player/:id').remove({
-        id: id
+        id: $scope.del_player_id
       }, {
-
         }).$promise.then(function (data) {
           notify({ message: '删除选手成功', duration: 2000, classes: 'alert-success' });
           $scope.query_player();
+          $scope.close();
         }, function (data) {
           notify({ message: '删除选手失败：' + data.data, duration: 10000, classes: 'alert-danger' });
         });
-    };
+    };    
     $scope.playerEdit = {};
     // 编辑选手
     $scope.edit_player = function (data) {
@@ -533,18 +543,18 @@ module.exports = ['$scope', '$state', 'Upload', 'notify', '$resource', '$uibModa
       $resource('/walker/player/:id').save({
         id: $scope.playerEditId
       }, $scope.playerEdit).$promise.then(function (data) {
-          notify({ message: '修改成功', duration: 10000, classes: 'alert-success' });
-          $scope.modal.close();
-          $scope.playerEditData.avatar = $scope.playerEdit.avatar;
-          $scope.playerEditData.name = $scope.playerEdit.name;
-          $scope.playerEditData.tel = $scope.playerEdit.tel;
-          $scope.playerEditData.role = $scope.playerEdit.role;
-          $scope.playerEditData.zburl = $scope.playerEdit.zburl;
-          $scope.playerEditData.playerid = $scope.playerEdit.playerid;
-          $scope.playerEditData.zbid = $scope.playerEdit.zbid;
-        }, function (data) {
-          notify({ message: '出错啦', duration: 10000, classes: 'alert-danger' });
-        });
+        notify({ message: '修改成功', duration: 10000, classes: 'alert-success' });
+        $scope.modal.close();
+        $scope.playerEditData.avatar = $scope.playerEdit.avatar;
+        $scope.playerEditData.name = $scope.playerEdit.name;
+        $scope.playerEditData.tel = $scope.playerEdit.tel;
+        $scope.playerEditData.role = $scope.playerEdit.role;
+        $scope.playerEditData.zburl = $scope.playerEdit.zburl;
+        $scope.playerEditData.playerid = $scope.playerEdit.playerid;
+        $scope.playerEditData.zbid = $scope.playerEdit.zbid;
+      }, function (data) {
+        notify({ message: '出错啦', duration: 10000, classes: 'alert-danger' });
+      });
     };
     //------------------选手模块开始----------------------
     $scope.close = function () {

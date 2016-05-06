@@ -65,7 +65,7 @@
           <span name="edit_map" class="glyphicon glyphicon-map-marker set-font-size" title="点击修改坐标" ng-click="show_map_dialog(data)"></span>
         </td>
         <td>
-          <a href="javascript:;" ng-click="edit_build(data)">修改</a>
+          <!--<a href="javascript:;" ng-click="edit_build(data)">修改</a>-->
           <a class="btn-del" href="javascript:;" ng-click="del_build(data.playerid)">删除</a>
         </td>
       </tr>
@@ -327,5 +327,25 @@
   <div class="modal-footer">
     <button class="btn btn-oppo" ng-click="close()">关闭</button>
     <button class="btn btn-oppo" ng-click="set_map_position()">保存</button>
+  </div>
+</script>
+<!--删除 建筑 -->
+<script type="text/ng-template" id="remove_build_dialog">
+  <div class="modal-body">
+    确认删除该建筑数据吗？
+  </div>
+  <div class="modal-footer">
+    <button class="btn btn-oppo" ng-click="close()">关闭</button>
+    <button class="btn btn-oppo" ng-click="remove_build()">确认</button>
+  </div>
+</script>
+<!--删除 选手 -->
+<script type="text/ng-template" id="remove_player_dialog">
+  <div class="modal-body">
+    确认删除改选手数据吗？
+  </div>
+  <div class="modal-footer">
+    <button class="btn btn-oppo" ng-click="close()">关闭</button>
+    <button class="btn btn-oppo" ng-click="remove_player()">确认</button>
   </div>
 </script>
