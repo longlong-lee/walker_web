@@ -3,7 +3,7 @@
     <thead>
       <tr>
         <th></th>
-        <th ng-repeat="data in players">{{data.name}}</th>
+        <th ng-repeat="data in playerList">{{data.name}}</th>
       </tr>
     </thead>
     <tbody>
@@ -11,7 +11,7 @@
         <td>{{player.name}}</td>
         <td ng-repeat=" data in datas[$index]">
           <input type="checkbox" class="dpn chk" id="{{data.objectId}}-{{data.subjectId}}" ng-checked="data.checked" ng-model="data.checked" ng-click="edit($event, data)">
-          <label for="{{data.objectId}}-{{data.subjectId}}"></label>
+          <label for="{{data.objectId}}-{{data.subjectId}}" title="{{data.name}}{{data.checked ? '' : '不'}}可看见{{data.subname}}"></label>
         </td>
       </tr>
     </tbody>

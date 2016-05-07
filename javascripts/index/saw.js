@@ -6,6 +6,13 @@ module.exports = ['$scope', '$state', 'notify', '$resource',
       $resource('/walker/setting/visible/ ').get({
 
       }).$promise.then(function (data) {
+         $scope.playerList = [];
+         var player = data.players;
+        for (var key in player) {
+          if(player[key].playerid !== "-1"){
+            $scope.playerList.push(player[key]);
+          }
+        }
         $scope.players = data.players;
         $scope.settings = data.visibleSettings;
         $scope.setData();
@@ -17,7 +24,7 @@ module.exports = ['$scope', '$state', 'notify', '$resource',
       var datas = [];
       angular.forEach($scope.players, function (value, index) {
         //行列
-        angular.forEach($scope.players, function (val, idx) {
+        angular.forEach($scope.playerList, function (val, idx) {
           //竖列
           var keepGoing = false, checked = false;
           angular.forEach($scope.settings, function (v, k) {

@@ -221,9 +221,9 @@
   </div>
   <div class="row dialog-layer-3">
     <div class="mt30">
-      <div class="wd50 fl" ng-repeat="data in editData.items">
-        <div class="col-sm-1">
-          <span ng-if="data.playerNeed !== 0">急</span>
+      <div class="wd50 fl" ng-repeat="data in editData.items | orderBy:'playerNeed':true">
+        <div class="col-sm-1 mt15">
+          <span ng-if="data.playerNeed !== 0" class="need">急</span>
         </div>
         <div class="col-sm-2">
           <img src="" alt="" class="avatar" ng-src="{{data.picUrl}}" title="{{data.title}}">

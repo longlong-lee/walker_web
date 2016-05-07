@@ -20,7 +20,7 @@ module.exports = ['$scope', '$state', 'Upload', 'notify', '$resource', '$uibModa
       $scope.modal.rendered.then(function () {
         var map = new AMap.Map('mapContainer');
         if (map.r) {
-          map.setZoom(10);
+          map.setZoom(14);
           if ($scope.edit_build_mode) {
             var position = new AMap.LngLat($scope.editBuildData.lng, $scope.editBuildData.lat);
             map.setCenter([$scope.editBuildData.lng, $scope.editBuildData.lat]);
