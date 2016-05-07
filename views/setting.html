@@ -5,7 +5,7 @@
     <thead>
       <tr>
         <th class="">区域中心</th>
-        <th class="">半径</th>
+        <th class="">半径（米）</th>
         <th class="">观众美化系数（乘）</th>
         <th class="">观众美化系数（加）</th>
         <th class="">距离提醒（开关）</th>
@@ -185,12 +185,6 @@
       <label class="col-sm-3 mt7">名称</label>
       <div class="col-sm-9">
         <input type="text" class="form-control" placeholder="请输入名称" ng-model="buildEdit.name">
-      </div>
-    </div>
-    <div class="row mb10">
-      <label class="col-sm-3 mt7">角色</label>
-      <div class="col-sm-9">
-        <select class="form-control" ng-options="role.name as role.name for role in roleList" ng-model="buildEdit.role"></select>
       </div>
     </div>
     <div class="row mb10">

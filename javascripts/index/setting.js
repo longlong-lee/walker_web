@@ -299,7 +299,6 @@ module.exports = ['$scope', '$state', 'Upload', 'notify', '$resource', '$uibModa
       $scope.buildEdit = {
         avatar: data.avatar,
         name: data.name,
-        role: data.role,
         tel: data.tel
       };
       $scope.modal = $uibModal.open({
@@ -340,7 +339,6 @@ module.exports = ['$scope', '$state', 'Upload', 'notify', '$resource', '$uibModa
         notify({ message: '修改成功', duration: 10000, classes: 'alert-success' });
         $scope.editBuildData.avatar = $scope.buildEdit.avatar;
         $scope.editBuildData.name = $scope.buildEdit.name;
-        $scope.editBuildData.role = $scope.buildEdit.role;
         $scope.editBuildData.tel = $scope.buildEdit.tel;
         $scope.modal.close();
       }, function (data) {

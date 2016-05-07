@@ -13,7 +13,7 @@ module.exports = ['$scope', '$rootScope', 'notify', '$resource', '$interval', '$
         });
     };
     $scope.getPlayers();
-    $rootScope.timer = $interval($scope.getPlayers, 30000);
+    $rootScope.timer = $interval($scope.getPlayers, 3000);
     $scope.editInfo = function (data) {
       $scope.editDataOrigin = data;
       $scope.editData = angular.copy(data);
