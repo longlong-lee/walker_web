@@ -1,7 +1,10 @@
 'use strict';
 
-module.exports = ['$scope', '$state', 'notify', '$resource',
-  function ($scope, $state, notify, $resource) {
+module.exports = ['$scope', '$state', 'notify', '$resource', '$rootScope', '$localStorage', 
+  function ($scope, $state, notify, $resource, $rootScope, $localStorage) {
+    if (!$localStorage.isLogin) {
+      $rootScope.out();
+    }
     $scope.getUserSet = function () {
       $resource('/walker/setting/visible/ ').get({
 

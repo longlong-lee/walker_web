@@ -1,7 +1,10 @@
 'use strict';
 
-module.exports = ['$scope', '$rootScope', 'notify', '$resource', '$interval', '$uibModal',
-  function ($scope, $rootScope, notify, $resource, $interval, $uibModal) {
+module.exports = ['$scope', '$rootScope', 'notify', '$resource', '$interval', '$uibModal', '$localStorage',
+  function ($scope, $rootScope, notify, $resource, $interval, $uibModal, $localStorage) {
+    if (!$localStorage.isLogin) {
+      $rootScope.out();
+    }
     $scope.getPlayers = function () {
       $resource('/walker/player/list')
         .get(function (data) {

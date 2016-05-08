@@ -1,7 +1,10 @@
 'use strict';
 
-module.exports = ['$scope', '$state', 'Upload', 'notify', '$resource', '$uibModal',
-  function ($scope, $state, Upload, notify, $resource, $uibModal) {
+module.exports = ['$scope', '$state', 'Upload', 'notify', '$resource', '$uibModal', '$rootScope', '$localStorage',
+  function ($scope, $state, Upload, notify, $resource, $uibModal, $rootScope, $localStorage) {
+    if (!$localStorage.isLogin) {
+      $rootScope.out();
+    }
     //------------------地图模块开始----------------------
     $scope.clickPosition = null;
     $scope.show_map_dialog = function (data) {
