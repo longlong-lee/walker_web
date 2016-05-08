@@ -10,8 +10,8 @@
       <tr ng-repeat="player in players">
         <td>{{player.name}}</td>
         <td ng-repeat=" data in datas[$index]">
-          <input type="checkbox" class="dpn chk" id="{{data.objectId}}-{{data.subjectId}}" ng-checked="data.checked" ng-model="data.checked" ng-click="edit($event, data)">
-          <label for="{{data.objectId}}-{{data.subjectId}}" title="{{data.name}}{{data.checked ? '' : '不'}}可看见{{data.subname}}"></label>
+          <input type="checkbox" class="dpn chk" id="{{data.subjectId}}-{{data.objectId}}" ng-checked="data.checked" ng-model="data.checked" ng-click="edit($event, data)">
+          <label for="{{data.subjectId}}-{{data.objectId}}" title="{{data.subname}}{{data.checked ? '' : '不'}}可看见{{data.name}}"></label>
         </td>
       </tr>
     </tbody>

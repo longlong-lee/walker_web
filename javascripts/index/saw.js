@@ -6,10 +6,10 @@ module.exports = ['$scope', '$state', 'notify', '$resource',
       $resource('/walker/setting/visible/ ').get({
 
       }).$promise.then(function (data) {
-         $scope.playerList = [];
-         var player = data.players;
+        $scope.playerList = [];
+        var player = data.players;
         for (var key in player) {
-          if(player[key].playerid !== "-1"){
+          if (player[key].playerid !== "-1") {
             $scope.playerList.push(player[key]);
           }
         }
@@ -30,7 +30,7 @@ module.exports = ['$scope', '$state', 'notify', '$resource',
           angular.forEach($scope.settings, function (v, k) {
             //判断是否开启
             if (!keepGoing) {
-              if (v.objectId === value.playerid && v.subjectId === val.playerid) {
+              if (v.subjectId === value.playerid && v.objectId === val.playerid) {
                 checked = (v.visible ? true : false);
                 keepGoing = true;
               }
@@ -40,10 +40,10 @@ module.exports = ['$scope', '$state', 'notify', '$resource',
             datas[index] = [];
           }
           datas[index].push({
-            name: value.name,
-            subname: val.name,
-            objectId: value.playerid,
-            subjectId: val.playerid,
+            subname: value.name,
+            name: val.name,
+            subjectId: value.playerid,
+            objectId: val.playerid,
             checked: checked
           });
         });
@@ -52,14 +52,14 @@ module.exports = ['$scope', '$state', 'notify', '$resource',
     };
     $scope.getUserSet();
     $scope.edit = function ($e, data) {
-      $resource('/walker/setting/visible/:objectId/:subjectId/:visible').get({
+      $resource('/walker/setting/visible/:subjectId/:objectId/:visible').get({
         objectId: data.objectId,
-          subjectId: data.subjectId,
-          visible: data.checked ? 1 : 0
+        subjectId: data.subjectId,
+        visible: data.checked ? 1 : 0
       }, {
-          
+
         }).$promise.then(function (res) {
-          var msg = data.name + (data.checked ? '可以看见' : '不可以看见') + data.subname;
+          var msg = data.subname + (data.checked ? '可以看见' : '不可以看见') + data.name;
           notify({ message: msg, duration: 10000, classes: 'alert-success' });
         }, function (res) {
           notify({ message: '状态修改失败，请稍后重试', duration: 10000, classes: 'alert-danger' });
