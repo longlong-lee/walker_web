@@ -5,9 +5,13 @@ module.exports = ['$scope', '$rootScope', 'notify', '$resource', '$interval', '$
     $scope.getPlayers = function () {
       $resource('/walker/player/list')
         .get(function (data) {
-          $scope.list1 = data["追捕者"];
-          $scope.list2 = data["逃亡者"];
-          $scope.list3 = data["候补者"];
+          if (data.code === 401) {
+            $rootScope.out();
+          } else {
+            $scope.list1 = data["追捕者"];
+            $scope.list2 = data["逃亡者"];
+            $scope.list3 = data["候补者"];
+          }
         }, function (data) {
           notify({ message: '获取数据失败,请刷新', duration: 10000, classes: 'alert-danger' });
         });
@@ -44,8 +48,12 @@ module.exports = ['$scope', '$rootScope', 'notify', '$resource', '$interval', '$
       }, {
           role: $scope.editData.player.role
         }, function (data) {
-          notify({ message: '角色修改成功', duration: 10000, classes: 'alert-success' });
-          $scope.getPlayers();
+          if (data.code === 401) {
+            $rootScope.out();
+          } else {
+            notify({ message: '角色修改成功', duration: 10000, classes: 'alert-success' });
+            $scope.getPlayers();
+          }
         }, function (data) {
           notify({ message: '角色修改失败', duration: 10000, classes: 'alert-danger' });
         });
@@ -56,8 +64,12 @@ module.exports = ['$scope', '$rootScope', 'notify', '$resource', '$interval', '$
       }, {
           status: $scope.editData.player.status
         }).$promise.then(function (data) {
-          notify({ message: '状态修改成功', duration: 10000, classes: 'alert-success' });
-          $scope.editDataOrigin.player.status = $scope.editData.player.status;
+          if (data.code === 401) {
+            $rootScope.out();
+          } else {
+            notify({ message: '状态修改成功', duration: 10000, classes: 'alert-success' });
+            $scope.editDataOrigin.player.status = $scope.editData.player.status;
+          }
         }, function (data) {
           notify({ message: '状态修改失败', duration: 10000, classes: 'alert-danger' });
         });
@@ -72,9 +84,13 @@ module.exports = ['$scope', '$rootScope', 'notify', '$resource', '$interval', '$
       }, {
           usedAmount: parseInt(part.usedAmount, 10)
         }).$promise.then(function (data) {
-          notify({ message: '数目修改成功', duration: 10000, classes: 'alert-success' });
-          part.isClick = false;
-          $scope.getPlayers();
+          if (data.code === 401) {
+            $rootScope.out();
+          } else {
+            notify({ message: '数目修改成功', duration: 10000, classes: 'alert-success' });
+            part.isClick = false;
+            $scope.getPlayers();
+          }
         }, function (data) {
           notify({ message: '数目修改失败', duration: 10000, classes: 'alert-danger' });
         });
@@ -90,16 +106,20 @@ module.exports = ['$scope', '$rootScope', 'notify', '$resource', '$interval', '$
       }, {
           tudou: parseInt($scope.editData.player.edit_tuDou, 10)
         }).$promise.then(function (data) {
-          notify({ message: '土豆值修改成功', duration: 10000, classes: 'alert-success' });
-          $scope.editData.player.tudou = parseInt($scope.editData.player.tudou, 10) + parseInt($scope.editData.player.edit_tuDou, 10);
-          $scope.editDataOrigin.player.tudou = $scope.editData.player.tudou;
-          $scope.isEditTuDou = false;
-          $scope.getPlayers();
+          if (data.code === 401) {
+            $rootScope.out();
+          } else {
+            notify({ message: '土豆值修改成功', duration: 10000, classes: 'alert-success' });
+            $scope.editData.player.tudou = parseInt($scope.editData.player.tudou, 10) + parseInt($scope.editData.player.edit_tuDou, 10);
+            $scope.editDataOrigin.player.tudou = $scope.editData.player.tudou;
+            $scope.isEditTuDou = false;
+            $scope.getPlayers();
+          }
         }, function (data) {
           notify({ message: '土豆值修改失败', duration: 10000, classes: 'alert-danger' });
         });
     };
-    $scope.cancle_editTuDou = function (){
+    $scope.cancle_editTuDou = function () {
       $scope.isEditTuDou = false;
     };
   }

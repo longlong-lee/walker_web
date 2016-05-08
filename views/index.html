@@ -10,6 +10,9 @@
       <a ui-sref="index.saw">可见设置</a>
     </li>
   </ul>
+  <span class="pull-right logout" ng-show="isLogin">
+    <a href="javascript:;" ng-click="logout()">注销</a>
+  </span>
 </div>
 <div class="content-ad">
   <div class="row">

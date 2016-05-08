@@ -1,7 +1,16 @@
 'use strict';
 
-module.exports = ['$stateProvider', '$urlRouterProvider', function ($stateProvider, $urlRouterProvider) {
+module.exports = ['$stateProvider', '$urlRouterProvider', '$httpProvider',  function ($stateProvider, $urlRouterProvider) {
   $urlRouterProvider.otherwise('');
+  $stateProvider.state('login',{
+    url: '/login',
+    views: {
+      main: {
+        template: require('../views/login.html'),
+        controller: require('./index/login.js')
+      }
+    }
+  });
   $stateProvider.state('index',{
     url: '',
     views: {

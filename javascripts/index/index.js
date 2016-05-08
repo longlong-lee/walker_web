@@ -1,7 +1,11 @@
 'use strict';
 
-module.exports = ['$scope', '$state', 'notify', '$resource', '$uibModal',
-  function ($scope, $state, notify, $resource, $uibModal) {
+module.exports = ['$scope', '$state', 'notify', '$resource', '$uibModal', '$localStorage', '$rootScope',
+  function ($scope, $state, notify, $resource, $uibModal, $localStorage, $rootScope) {
+    $scope.isLogin = $localStorage.isLogin;
+    if (!$localStorage.isLogin) {
+      $rootScope.out();
+    }
     if ($state.current.name === 'index') {
       $state.go('index.player');
       $scope.sref = 'index.player';
@@ -20,17 +24,27 @@ module.exports = ['$scope', '$state', 'notify', '$resource', '$uibModal',
 
       }, $scope.notice)
         .$promise.then(function (data) {
-          notify({ message: '公告发送成功', duration: 10000, classes: 'alert-success' });
+          if (data.code === 401) {
+            $rootScope.out();
+          } else {
+            notify({ message: '公告发送成功', duration: 10000, classes: 'alert-success' });
+          }
         }, function (data) {
+          $rootScope.out();
           notify({ message: '公告发送失败', duration: 10000, classes: 'alert-danger' });
         });
     };
     $scope.seeNotice = function () {
       $resource('/walker/setting/notification/ ')
         .query(function (data) {
-          $scope.noticeList = data;
-          $scope.showNotice();
+          if (data.code === 401) {
+            $rootScope.out();
+          } else {
+            $scope.noticeList = data;
+            $scope.showNotice();
+          }
         }, function (data) {
+          $rootScope.out();
           notify({ message: '获取公告失败', duration: 10000, classes: 'alert-danger' });
         });
     };
@@ -40,6 +54,14 @@ module.exports = ['$scope', '$state', 'notify', '$resource', '$uibModal',
         scope: $scope,
         size: 'notice-dialog'
       });
+    };
+    $scope.logout = function () {
+      $resource('/walker/user/logout')
+        .get(function (data) {
+          $rootScope.out();
+        }, function (data) {
+          $rootScope.out();
+        });
     };
   }
 ];

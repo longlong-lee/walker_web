@@ -63,11 +63,15 @@ module.exports = ['$scope', '$state', 'Upload', 'notify', '$resource', '$uibModa
             lng: $scope.clickPositionLng + '',
             lat: $scope.clickPositionLat + ''
           }).$promise.then(function (data) {
-            $scope.editBuildData.lng = $scope.clickPositionLng + '';
-            $scope.editBuildData.lat = $scope.clickPositionLat + '';
-            $scope.edit_build_mode = false;
-            notify({ message: '修改成功', duration: 10000, classes: 'alert-success' });
-            $scope.modal.close();
+            if (data.code === 401) {
+              $rootScope.out();
+            } else {
+              $scope.editBuildData.lng = $scope.clickPositionLng + '';
+              $scope.editBuildData.lat = $scope.clickPositionLat + '';
+              $scope.edit_build_mode = false;
+              notify({ message: '修改成功', duration: 10000, classes: 'alert-success' });
+              $scope.modal.close();
+            }
           }, function (data) {
             notify({ message: '出错啦', duration: 10000, classes: 'alert-danger' });
           });
@@ -78,11 +82,15 @@ module.exports = ['$scope', '$state', 'Upload', 'notify', '$resource', '$uibModa
             centerLng: $scope.clickPositionLng + '',
             centerLat: $scope.clickPositionLat + ''
           }).$promise.then(function (req) {
-            $scope.settings.center.lng = $scope.clickPositionLng + '';
-            $scope.settings.center.lat = $scope.clickPositionLat + '';
-            $scope.edit_setting_mode = false;
-            notify({ message: '修改成功', duration: 10000, classes: 'alert-success' });
-            $scope.modal.close();
+            if (req.code === 401) {
+              $rootScope.out();
+            } else {
+              $scope.settings.center.lng = $scope.clickPositionLng + '';
+              $scope.settings.center.lat = $scope.clickPositionLat + '';
+              $scope.edit_setting_mode = false;
+              notify({ message: '修改成功', duration: 10000, classes: 'alert-success' });
+              $scope.modal.close();
+            }
           }, function (data) {
             notify({ message: '出错啦', duration: 10000, classes: 'alert-danger' });
           });
@@ -96,7 +104,11 @@ module.exports = ['$scope', '$state', 'Upload', 'notify', '$resource', '$uibModa
     //------------------区域设置模块开始----------------------
     $scope.query_setting = function () {
       $resource('/walker/setting/ ').get().$promise.then(function (data) {
-        $scope.settings = data;
+        if (data.code === 401) {
+          $rootScope.out();
+        } else {
+          $scope.settings = data;
+        }
       }, function (data) {
         notify({ message: '出错啦', duration: 10000, classes: 'alert-danger' });
       });
@@ -127,13 +139,17 @@ module.exports = ['$scope', '$state', 'Upload', 'notify', '$resource', '$uibModa
           warningSwitch: data.switch,
           warningDistance: parseInt(data.distance)
         }).$promise.then(function (req) {
-          $scope.settings.radius = data.radius;
-          $scope.settings.add = data.add;
-          $scope.settings.mul = data.mul;
-          $scope.settings.distanceWarning.warningSwitch = data.switch;
-          $scope.settings.distanceWarning.distance = data.distance;
-          notify({ message: '修改成功', duration: 10000, classes: 'alert-success' });
-          $scope.modal.close();
+          if (req.code === 401) {
+            $rootScope.out();
+          } else {
+            $scope.settings.radius = data.radius;
+            $scope.settings.add = data.add;
+            $scope.settings.mul = data.mul;
+            $scope.settings.distanceWarning.warningSwitch = data.switch;
+            $scope.settings.distanceWarning.distance = data.distance;
+            notify({ message: '修改成功', duration: 10000, classes: 'alert-success' });
+            $scope.modal.close();
+          }
         }, function (data) {
           notify({ message: '出错啦', duration: 10000, classes: 'alert-danger' });
         });
@@ -171,7 +187,11 @@ module.exports = ['$scope', '$state', 'Upload', 'notify', '$resource', '$uibModa
       $resource('/walker/player/building/list').query({
 
       }).$promise.then(function (data) {
-        $scope.buildings = data;
+        if (data.code === 401) {
+          $rootScope.out();
+        } else {
+          $scope.buildings = data;
+        }
       }, function (data) {
         notify({ message: '出错啦', duration: 10000, classes: 'alert-danger' });
       });
@@ -252,19 +272,23 @@ module.exports = ['$scope', '$state', 'Upload', 'notify', '$resource', '$uibModa
           }).put({
 
           }, data).$promise.then(function (data) {
-            notify({ message: '添加特殊建筑成功', duration: 2000, classes: 'alert-success' });
-            $scope.isAddBuild = false;
-            $scope.build = {
-              playerid: '',
-              zbid: '',
-              avatar: '',
-              name: '',
-              role: '',
-              tel: '',
-              lng: '',
-              lat: ''
-            };
-            $scope.query_build();
+            if (data.code === 401) {
+              $rootScope.out();
+            } else {
+              notify({ message: '添加特殊建筑成功', duration: 2000, classes: 'alert-success' });
+              $scope.isAddBuild = false;
+              $scope.build = {
+                playerid: '',
+                zbid: '',
+                avatar: '',
+                name: '',
+                role: '',
+                tel: '',
+                lng: '',
+                lat: ''
+              };
+              $scope.query_build();
+            }
           }, function (data) {
             notify({ message: '添加特殊建筑失败：' + data.data, duration: 10000, classes: 'alert-danger' });
           });
@@ -284,9 +308,13 @@ module.exports = ['$scope', '$state', 'Upload', 'notify', '$resource', '$uibModa
         id: $scope.del_build_id
       }, {
         }).$promise.then(function (data) {
-          notify({ message: '删除特殊建筑成功', duration: 2000, classes: 'alert-success' });
-          $scope.query_build();
-          $scope.close();
+          if (data.code === 401) {
+            $rootScope.out();
+          } else {
+            notify({ message: '删除特殊建筑成功', duration: 2000, classes: 'alert-success' });
+            $scope.query_build();
+            $scope.close();
+          }
         }, function (data) {
           notify({ message: '删除特殊建筑失败：' + data.data, duration: 10000, classes: 'alert-danger' });
         });
@@ -336,11 +364,15 @@ module.exports = ['$scope', '$state', 'Upload', 'notify', '$resource', '$uibModa
       $resource('/walker/player/:id').save({
         id: $scope.buildEditId
       }, $scope.buildEdit).$promise.then(function (data) {
-        notify({ message: '修改成功', duration: 10000, classes: 'alert-success' });
-        $scope.editBuildData.avatar = $scope.buildEdit.avatar;
-        $scope.editBuildData.name = $scope.buildEdit.name;
-        $scope.editBuildData.tel = $scope.buildEdit.tel;
-        $scope.modal.close();
+        if (data.code === 401) {
+          $rootScope.out();
+        } else {
+          notify({ message: '修改成功', duration: 10000, classes: 'alert-success' });
+          $scope.editBuildData.avatar = $scope.buildEdit.avatar;
+          $scope.editBuildData.name = $scope.buildEdit.name;
+          $scope.editBuildData.tel = $scope.buildEdit.tel;
+          $scope.modal.close();
+        }
       }, function (data) {
         notify({ message: '出错啦', duration: 10000, classes: 'alert-danger' });
       });
@@ -361,7 +393,11 @@ module.exports = ['$scope', '$state', 'Upload', 'notify', '$resource', '$uibModa
     $scope.query_player = function () {
       $resource('/walker/player/simplelist').query({
       }).$promise.then(function (data) {
-        $scope.players = data;
+        if (data.code === 401) {
+          $rootScope.out();
+        } else {
+          $scope.players = data;
+        }
       }, function (data) {
         notify({ message: '出错啦', duration: 10000, classes: 'alert-danger' });
       });
@@ -453,19 +489,23 @@ module.exports = ['$scope', '$state', 'Upload', 'notify', '$resource', '$uibModa
           }).put({
 
           }, data).$promise.then(function (data) {
-            notify({ message: '添加选手成功', duration: 2000, classes: 'alert-success' });
-            $scope.modal.close();
-            $scope.isAddPlayer = false;
-            $scope.player = {
-              avatar: '',
-              name: '',
-              tel: '',
-              role: '',
-              zburl: '',
-              playerid: '',
-              zbid: ''
-            };
-            $scope.query_player();
+            if (data.code === 401) {
+              $rootScope.out();
+            } else {
+              notify({ message: '添加选手成功', duration: 2000, classes: 'alert-success' });
+              $scope.modal.close();
+              $scope.isAddPlayer = false;
+              $scope.player = {
+                avatar: '',
+                name: '',
+                tel: '',
+                role: '',
+                zburl: '',
+                playerid: '',
+                zbid: ''
+              };
+              $scope.query_player();
+            }
           }, function (data) {
             notify({ message: '添加选手失败：' + data.data, duration: 10000, classes: 'alert-danger' });
           });
@@ -485,13 +525,17 @@ module.exports = ['$scope', '$state', 'Upload', 'notify', '$resource', '$uibModa
         id: $scope.del_player_id
       }, {
         }).$promise.then(function (data) {
-          notify({ message: '删除选手成功', duration: 2000, classes: 'alert-success' });
-          $scope.query_player();
-          $scope.close();
+          if (data.code === 401) {
+            $rootScope.out();
+          } else {
+            notify({ message: '删除选手成功', duration: 2000, classes: 'alert-success' });
+            $scope.query_player();
+            $scope.close();
+          }
         }, function (data) {
           notify({ message: '删除选手失败：' + data.data, duration: 10000, classes: 'alert-danger' });
         });
-    };    
+    };
     $scope.playerEdit = {};
     // 编辑选手
     $scope.edit_player = function (data) {
@@ -541,15 +585,19 @@ module.exports = ['$scope', '$state', 'Upload', 'notify', '$resource', '$uibModa
       $resource('/walker/player/:id').save({
         id: $scope.playerEditId
       }, $scope.playerEdit).$promise.then(function (data) {
-        notify({ message: '修改成功', duration: 10000, classes: 'alert-success' });
-        $scope.modal.close();
-        $scope.playerEditData.avatar = $scope.playerEdit.avatar;
-        $scope.playerEditData.name = $scope.playerEdit.name;
-        $scope.playerEditData.tel = $scope.playerEdit.tel;
-        $scope.playerEditData.role = $scope.playerEdit.role;
-        $scope.playerEditData.zburl = $scope.playerEdit.zburl;
-        $scope.playerEditData.playerid = $scope.playerEdit.playerid;
-        $scope.playerEditData.zbid = $scope.playerEdit.zbid;
+        if (data.code === 401) {
+          $rootScope.out();
+        } else {
+          notify({ message: '修改成功', duration: 10000, classes: 'alert-success' });
+          $scope.modal.close();
+          $scope.playerEditData.avatar = $scope.playerEdit.avatar;
+          $scope.playerEditData.name = $scope.playerEdit.name;
+          $scope.playerEditData.tel = $scope.playerEdit.tel;
+          $scope.playerEditData.role = $scope.playerEdit.role;
+          $scope.playerEditData.zburl = $scope.playerEdit.zburl;
+          $scope.playerEditData.playerid = $scope.playerEdit.playerid;
+          $scope.playerEditData.zbid = $scope.playerEdit.zbid;
+        }
       }, function (data) {
         notify({ message: '出错啦', duration: 10000, classes: 'alert-danger' });
       });

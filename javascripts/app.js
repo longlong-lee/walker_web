@@ -6,7 +6,8 @@ angular.module('app', [
   'ngAnimate',
   'ngFileUpload',
   'cgNotify',
-  'ui.bootstrap'
+  'ui.bootstrap',
+  'ngStorage'
 ])
   .config(require('./routing.js'))
   .run(require('./routSetting.js'))

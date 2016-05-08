@@ -31,6 +31,16 @@ html,body {
 .row {
   margin: 0;
 }
+.login-form {
+  margin: 200px auto;
+  width: 400px;
+  height: 400px;
+}
+.logout {
+  margin-top: -27px;
+  margin-right: 20px;
+  font-size: 20px;
+}
 .content-title {
   background-color: #f8f8f8;
   border-bottom: 2px solid #1895d4;
@@ -323,7 +333,7 @@ img.avatar {
 	box-shadow: 0 0 1px rgba(0,0,0,0.6);
 }
 .chk + label:after {
-  content: "关闭";
+  content: "\5173\95ED";
   position: absolute;
   font-size: 11px;
   color: white;
@@ -336,7 +346,7 @@ img.avatar {
 	box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.1), 0 0 10px rgba(146, 196, 245, 0.4);
 }
 .chk:checked + label:after {
-	content: "开启";
+	content: "\5F00\542F";
 	left: 15px;
 }
 .chk:checked + label:before {

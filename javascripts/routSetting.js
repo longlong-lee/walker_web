@@ -1,7 +1,12 @@
 'use strict';
 
-var setting = ['$rootScope', '$state', '$interval',
-  function ($rootScope, $state, $interval) {
+var setting = ['$rootScope', '$state', '$interval', '$localStorage', 'notify',
+  function ($rootScope, $state, $interval, $localStorage, notify) {
+    $rootScope.out = function () {
+      $localStorage.isLogin = false;
+      $state.go('login');
+      return false;
+    };
     $rootScope.$on('$stateChangeStart', function (event, toState, toParams, fromState, fromParams) {
 
     });

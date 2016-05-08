@@ -8,7 +8,8 @@ var common = [
   'angular-animate',
   'ng-file-upload',
   'angular-ui-bootstrap',
-  './angular-notify.min.js'
+  './angular-notify.min.js',
+  'ngstorage'
 ];
 module.exports = {
   context: path.join(__dirname, '/javascripts'),
