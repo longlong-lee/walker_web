@@ -308,6 +308,9 @@ img.avatar {
   width: 140%;
   max-width: 140%;
 }
+.tool-setting .table {
+  max-width: 140%;
+}
 .chk + label {
   background-color: #FFF;
 	padding: 11px 9px;

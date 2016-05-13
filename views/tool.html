@@ -1,4 +1,4 @@
-<div class="saw-setting">
+<div class="tool-setting">
   <div class="row">
     <button class="btn btn-primary ml20" ng-click="allOpen()">全部开启</button>
     <button class="btn btn-primary ml20" ng-click="allClose()">全部关闭</button>
@@ -6,8 +6,8 @@
   <table class="table">
     <thead>
       <tr>
-        <th></th>
-        <th ng-repeat="data in playerList">{{data.name}}</th>
+        <th style="width: 80px;"></th>
+        <th style="width: 80px;" ng-repeat="data in items">{{data.title}}</th>
       </tr>
     </thead>
     <tbody>

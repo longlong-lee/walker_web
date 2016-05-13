@@ -6,7 +6,7 @@ module.exports = ['$scope', '$state', 'notify', '$resource', '$rootScope', '$loc
       $rootScope.out();
     }
     $scope.allOpen = function () {
-      $resource('/walker/setting/visible/all/on ').get({
+      $resource('/walker/setting/visible/all/on').get({
       }).$promise.then(function (data) {
         if (data.code === 401) {
           $rootScope.out();
@@ -19,7 +19,7 @@ module.exports = ['$scope', '$state', 'notify', '$resource', '$rootScope', '$loc
       });
     };
     $scope.allClose = function () {
-      $resource('/walker/setting/visible/all/off ').get({
+      $resource('/walker/setting/visible/all/off').get({
       }).$promise.then(function (data) {
         if (data.code === 401) {
           $rootScope.out();

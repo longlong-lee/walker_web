@@ -6,7 +6,7 @@ module.exports = ['$scope', '$state', 'notify', '$resource', '$rootScope', '$loc
       $rootScope.out();
     }
     $scope.allOpen = function () {
-      $resource('/walker/setting/playeritem/all/allow ').get({
+      $resource('/walker/setting/playeritem/all/allow').get({
       }).$promise.then(function (data) {
         if (data.code === 401) {
           $rootScope.out();
@@ -19,7 +19,7 @@ module.exports = ['$scope', '$state', 'notify', '$resource', '$rootScope', '$loc
       });
     };
     $scope.allClose = function () {
-      $resource('/walker/setting/playeritem/all/playeritem ').get({
+      $resource('/walker/setting/playeritem/all/disallow').get({
       }).$promise.then(function (data) {
         if (data.code === 401) {
           $rootScope.out();
@@ -35,19 +35,12 @@ module.exports = ['$scope', '$state', 'notify', '$resource', '$rootScope', '$loc
       $resource('/walker/setting/playeritem/ ').get({
 
       }).$promise.then(function (data) {
-        debugger;
-        $scope.playerList = [];
         if (data.code === 401) {
           $rootScope.out();
         } else {
-          var player = data.players;
-          for (var key in player) {
-            if (player[key].playerid !== "-1") {
-              $scope.playerList.push(player[key]);
-            }
-          }
           $scope.players = data.players;
-          $scope.settings = data.visibleSettings;
+          $scope.items = data.items;
+          $scope.allow = data.allow;
           $scope.setData();
         }
       }, function (data) {
@@ -56,16 +49,16 @@ module.exports = ['$scope', '$state', 'notify', '$resource', '$rootScope', '$loc
     };
     $scope.setData = function () {
       var datas = [];
+      //行列
       angular.forEach($scope.players, function (value, index) {
-        //行列
-        angular.forEach($scope.playerList, function (val, idx) {
-          //竖列
+        //竖列
+        angular.forEach($scope.items, function (val, idx) {
           var keepGoing = false, checked = false;
-          angular.forEach($scope.settings, function (v, k) {
+          angular.forEach($scope.allow, function (v, k) {
             //判断是否开启
             if (!keepGoing) {
-              if (v.subjectId === value.playerid && v.objectId === val.playerid) {
-                checked = (v.visible ? true : false);
+              if (v.id === val.id && v.playerid === value.playerid) {
+                checked = (v.allow === '1' ? true : false);
                 keepGoing = true;
               }
             }
@@ -75,9 +68,9 @@ module.exports = ['$scope', '$state', 'notify', '$resource', '$rootScope', '$loc
           }
           datas[index].push({
             subname: value.name,
-            name: val.name,
+            name: val.title,
             subjectId: value.playerid,
-            objectId: val.playerid,
+            objectId: val.id,
             checked: checked
           });
         });
@@ -89,7 +82,7 @@ module.exports = ['$scope', '$state', 'notify', '$resource', '$rootScope', '$loc
       $resource('/walker/setting/playeritem/:subjectId/:objectId/:visible').get({
         objectId: data.objectId,
         subjectId: data.subjectId,
-        visible: data.checked ? 1 : 0
+        visible: data.checked ? '1' : '2'
       }, {
 
         }).$promise.then(function (res) {
