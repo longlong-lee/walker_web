@@ -160,7 +160,7 @@ module.exports = ['$scope', '$state', 'Upload', 'notify', '$resource', '$uibModa
     //------------------区域设置模块结束----------------------
     //------------------建筑模块开始----------------------
     $scope.roleList = [{
-      name: ' 基地'
+      name: '基地'
     }, {
         name: '监狱'
       }, {
@@ -293,6 +293,7 @@ module.exports = ['$scope', '$state', 'Upload', 'notify', '$resource', '$uibModa
               $scope.query_build();
             }
           }, function (data) {
+            $scope.isAddBuild = true;
             notify({ message: '添加特殊建筑失败：' + data.data, duration: 10000, classes: 'alert-danger' });
           });
       }

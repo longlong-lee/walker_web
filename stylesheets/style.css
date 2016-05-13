@@ -46,7 +46,7 @@ html,body {
   border-bottom: 2px solid #1895d4;
 }
 .content-title>ul.nav {
-  margin-left: 35%;
+  margin-left: 28%;
 }
 .nav-pills>li {
   width: 200px;
@@ -439,7 +439,6 @@ img.avatar {
 }
 .modal-notice-dialog{
   margin-top: 80px;
-  height: 600px;
   max-height: 600px;
   overflow-y: scroll;
 }

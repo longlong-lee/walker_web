@@ -11,8 +11,8 @@ module.exports = ['$scope', '$rootScope', 'notify', '$resource', '$interval', '$
           if (data.code === 401) {
             $rootScope.out();
           } else {
-            $scope.list1 = data["追捕者"];
-            $scope.list2 = data["逃亡者"];
+            $scope.list1 = data["猫"];
+            $scope.list2 = data["鼠"];
             $scope.list3 = data["候补者"];
           }
         }, function (data) {
@@ -23,27 +23,39 @@ module.exports = ['$scope', '$rootScope', 'notify', '$resource', '$interval', '$
     $rootScope.timer = $interval($scope.getPlayers, 30000);
     $scope.editInfo = function (data) {
       $scope.editDataOrigin = data;
-      $scope.editData = angular.copy(data);
-      $scope.isShowDiv = true;
-      $uibModal.open({
-        templateUrl: 'dialog',
-        scope: $scope,
-        size: 'md'
-      });
+      $resource('/walker/player/:id')
+        .get({
+          id: data.player.playerid
+        }, function (res) {
+          if (res.code === 401) {
+            $rootScope.out();
+          } else {
+            $scope.editData = res;
+            $scope.isShowDiv = true;
+            $uibModal.open({
+              templateUrl: 'dialog',
+              scope: $scope,
+              size: 'md'
+            });
+          }
+        }, function (res) {
+          notify({ message: '获取数据失败,请刷新', duration: 10000, classes: 'alert-danger' });
+        });
+
     };
     $scope.roleList = [{
-      name: '逃亡者'
+      name: '鼠'
     }, {
-        name: '追捕者'
+        name: '猫'
       }, {
         name: '候补者'
       }];
     $scope.statusList = [{
-      name: '正常'
+      name: '活跃状态'
     }, {
-        name: '入狱'
+        name: '监狱状态'
       }, {
-        name: '淘汰'
+        name: '待激活状态'
       }];
     $scope.editRole = function () {
       $resource('/walker/player/:id').save({
@@ -112,14 +124,14 @@ module.exports = ['$scope', '$rootScope', 'notify', '$resource', '$interval', '$
           if (data.code === 401) {
             $rootScope.out();
           } else {
-            notify({ message: '土豆值修改成功', duration: 10000, classes: 'alert-success' });
+            notify({ message: '金币修改成功', duration: 10000, classes: 'alert-success' });
             $scope.editData.player.tudou = parseInt($scope.editData.player.tudou, 10) + parseInt($scope.editData.player.edit_tuDou, 10);
             $scope.editDataOrigin.player.tudou = $scope.editData.player.tudou;
             $scope.isEditTuDou = false;
             $scope.getPlayers();
           }
         }, function (data) {
-          notify({ message: '土豆值修改失败', duration: 10000, classes: 'alert-danger' });
+          notify({ message: '金币修改失败', duration: 10000, classes: 'alert-danger' });
         });
     };
     $scope.cancle_editTuDou = function () {

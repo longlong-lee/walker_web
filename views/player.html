@@ -20,14 +20,14 @@
       <div class="row color1">
         <div class="col-sm-3">人气值</div>
         <div class="col-sm-3">排名</div>
-        <div class="col-sm-3">土豆值</div>
+        <div class="col-sm-3">金币</div>
         <div class="col-sm-3">排名</div>
       </div>
       <div class="row color2 rank-list1">
         <div class="col-sm-3">{{data.player.money}}</div>
-        <div class="col-sm-3">{{data.player.rank}}</div>
-        <div class="col-sm-3">{{data.player.tudou}}</div>
         <div class="col-sm-3">{{data.player.moneyRank}}</div>
+        <div class="col-sm-3">{{data.player.tudou}}</div>
+        <div class="col-sm-3">{{data.player.rank}}</div>
       </div>
     </div>
     <div class="content-content-3">
@@ -69,14 +69,14 @@
       <div class="row color1">
         <div class="col-sm-3">人气值</div>
         <div class="col-sm-3">排名</div>
-        <div class="col-sm-3">土豆值</div>
+        <div class="col-sm-3">金币</div>
         <div class="col-sm-3">排名</div>
       </div>
       <div class="row color2">
         <div class="col-sm-3">{{data.player.money}}</div>
-        <div class="col-sm-3">{{data.player.rank}}</div>
-        <div class="col-sm-3">{{data.player.tudou}}</div>
         <div class="col-sm-3">{{data.player.moneyRank}}</div>
+        <div class="col-sm-3">{{data.player.tudou}}</div>
+        <div class="col-sm-3">{{data.player.rank}}</div>
       </div>
     </div>
     <div class="content-content-3">
@@ -118,14 +118,14 @@
       <div class="row">
         <div class="col-sm-3">人气值</div>
         <div class="col-sm-3">排名</div>
-        <div class="col-sm-3">土豆值</div>
+        <div class="col-sm-3">金币</div>
         <div class="col-sm-3">排名</div>
       </div>
       <div class="row color2 rank-list3">
         <div class="col-sm-3">{{data.player.money}}</div>
-        <div class="col-sm-3">{{data.player.rank}}</div>
-        <div class="col-sm-3">{{data.player.tudou}}</div>
         <div class="col-sm-3">{{data.player.moneyRank}}</div>
+        <div class="col-sm-3">{{data.player.tudou}}</div>
+        <div class="col-sm-3">{{data.player.rank}}</div>
       </div>
     </div>
     <div class="content-content-3">
@@ -165,12 +165,12 @@
       <div class="row color1">
         <div class="col-sm-3">人气值</div>
         <div class="col-sm-3">排名</div>
-        <div class="col-sm-3">土豆值</div>
+        <div class="col-sm-3">金币</div>
         <div class="col-sm-3">排名</div>
       </div>
       <div class="row color2">
         <div class="col-sm-3">{{editData.player.money}}</div>
-        <div class="col-sm-3">{{editData.player.rank}}</div>
+        <div class="col-sm-3">{{editData.player.moneyRank}}</div>
         <div class="col-sm-3">
           <span ng-hide="isEditTuDou" class="crp" ng-click="showEditTuDou()">{{editData.player.tudou}}</span>
           <span ng-show="isEditTuDou">
@@ -181,7 +181,7 @@
             <button class="btn btn-dialog-2 edit-tudou" ng-click="cancle_editTuDou()">取消</button>
           </span>
         </div>
-        <div class="col-sm-3">{{editData.player.moneyRank}}</div>
+        <div class="col-sm-3">{{editData.player.rank}}</div>
       </div>
     </div>
   </div>

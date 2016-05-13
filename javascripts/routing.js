@@ -46,5 +46,14 @@ module.exports = ['$stateProvider', '$urlRouterProvider', '$httpProvider',  func
         controller: require('./index/saw.js')
       }
     }
+  })
+  .state('index.tool', {
+    url: '/tool',
+    views: {
+      tab: {
+        template: require('../views/tool.html'),
+        controller: require('./index/tool.js')
+      }
+    }
   });
 }];

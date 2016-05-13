@@ -6,35 +6,36 @@ module.exports = ['$scope', '$state', 'notify', '$resource', '$rootScope', '$loc
       $rootScope.out();
     }
     $scope.allOpen = function () {
-      $resource('/walker/setting/visible/all/on ').get({
+      $resource('/walker/setting/playeritem/all/allow ').get({
       }).$promise.then(function (data) {
         if (data.code === 401) {
           $rootScope.out();
         } else {
-          $scope.getUserSet();
+          $scope.getToolSet();
         }
       }, function (data) {
         $rootScope.out();
-        notify({ message: '全部开启设置失败', duration: 10000, classes: 'alert-danger' });
+        notify({ message: '全部开启道具设置失败', duration: 10000, classes: 'alert-danger' });
       });
     };
     $scope.allClose = function () {
-      $resource('/walker/setting/visible/all/off ').get({
+      $resource('/walker/setting/playeritem/all/playeritem ').get({
       }).$promise.then(function (data) {
         if (data.code === 401) {
           $rootScope.out();
         } else {
-          $scope.getUserSet();
+          $scope.getToolSet();
         }
       }, function (data) {
         $rootScope.out();
-        notify({ message: '全部关闭设置失败', duration: 10000, classes: 'alert-danger' });
+        notify({ message: '全部关闭道具设置失败', duration: 10000, classes: 'alert-danger' });
       });
     };
-    $scope.getUserSet = function () {
-      $resource('/walker/setting/visible/ ').get({
+    $scope.getToolSet = function () {
+      $resource('/walker/setting/playeritem/ ').get({
 
       }).$promise.then(function (data) {
+        debugger;
         $scope.playerList = [];
         if (data.code === 401) {
           $rootScope.out();
@@ -50,7 +51,7 @@ module.exports = ['$scope', '$state', 'notify', '$resource', '$rootScope', '$loc
           $scope.setData();
         }
       }, function (data) {
-        notify({ message: '获取设置失败', duration: 10000, classes: 'alert-danger' });
+        notify({ message: '获取道具设置失败', duration: 10000, classes: 'alert-danger' });
       });
     };
     $scope.setData = function () {
@@ -83,9 +84,9 @@ module.exports = ['$scope', '$state', 'notify', '$resource', '$rootScope', '$loc
       });
       $scope.datas = datas;
     };
-    $scope.getUserSet();
+    $scope.getToolSet();
     $scope.edit = function ($e, data) {
-      $resource('/walker/setting/visible/:subjectId/:objectId/:visible').get({
+      $resource('/walker/setting/playeritem/:subjectId/:objectId/:visible').get({
         objectId: data.objectId,
         subjectId: data.subjectId,
         visible: data.checked ? 1 : 0
