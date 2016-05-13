@@ -11,6 +11,7 @@ module.exports = ['$scope', '$state', 'notify', '$resource', '$rootScope', '$loc
         if (data.code === 401) {
           $rootScope.out();
         } else {
+          notify({ message: '全部开启道具设置成功', duration: 10000, classes: 'alert-info' });
           $scope.getToolSet();
         }
       }, function (data) {
@@ -24,6 +25,7 @@ module.exports = ['$scope', '$state', 'notify', '$resource', '$rootScope', '$loc
         if (data.code === 401) {
           $rootScope.out();
         } else {
+          notify({ message: '全部关闭道具设置成功', duration: 10000, classes: 'alert-info' });
           $scope.getToolSet();
         }
       }, function (data) {
